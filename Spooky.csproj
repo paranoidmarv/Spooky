@@ -81,18 +81,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\_MyStuff\Codes\AStar.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Attribute.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Cell.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character.cs" />
     <Compile Include="Assets\_MyStuff\Codes\CharacterCreator.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Map.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Map\AStar.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Map\Cell.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Map\Map.cs" />
     <Compile Include="Assets\_MyStuff\Codes\PlayerHandler.cs" />
     <Compile Include="Assets\_MyStuff\Codes\PlayerInput.cs" />
     <Compile Include="Assets\_MyStuff\Codes\RuleSetEngine.cs" />
     <Compile Include="Assets\_MyStuff\Codes\SceneManager.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Tuple.cs" />
     <Compile Include="Assets\_MyStuff\Codes\UIManager.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Utility Scripts\PlaceNewCharacter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Backyard - Free\Readme.txt" />

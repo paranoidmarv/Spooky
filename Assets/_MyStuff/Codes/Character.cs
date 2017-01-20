@@ -65,6 +65,7 @@ public class Character : MonoBehaviour {
 
     private IEnumerator MoveTween(Tuple<List<Vector3>, Cell> moveToArgs) {
         moving = true;
+        //currentCell.isOccupied = false;
         //Add check for same direction movement to smooth animation and reduce calls
         for (int i = 0; i < moveToArgs.First.Count; i++) {
             iTween.MoveTo(gameObject, iTween.Hash(

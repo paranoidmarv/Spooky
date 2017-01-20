@@ -116,7 +116,7 @@ public class Map : MonoBehaviour {
                 if((pointPool - (cell.Second + GetCellWeight(cellPosition))) >= 0 && !closedCells.Contains(GetCell(cellPosition))) { openCells.Add(new Tuple<Cell, float>(GetCell(cellPosition), GetCellWeight(cellPosition) + cell.Second)); }
             }
             openCells.Remove(cell);
-            if (cell.First.IsTraversable && !closedCells.Contains(cell.First)) {
+            if (cell.First.IsTraversable && !cell.First.isOccupied  && !closedCells.Contains(cell.First)) {
                 closedCells.Add(cell.First);
             }
         }
@@ -126,6 +126,8 @@ public class Map : MonoBehaviour {
     //--- AStar methods
     public List<Tuple<int, int>> GetAdjList(Tuple<int, int> cellPosition, bool onlyTraversable) {
         if (onlyTraversable) {
+            //===HERE IS WHERE YOU FILTER OUT OCCUPIED CELLS===//
+            //Also, you will need to be able to edit cellGrid to remove tiles if they become !traversable
             return cellGrid[cellPosition.First, cellPosition.Second].traversableAdjCellPosList;
         }
         else { return cellGrid[cellPosition.First, cellPosition.Second].adjCellPosList; }

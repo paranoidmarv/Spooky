@@ -32,20 +32,6 @@ public class RuleSetEngine : MonoBehaviour {
             }
         }
         isRuleSetLoaded = true;
-        /*foreach (Attribute att in primaryAttributes) {
-            Debug.Log(att.name + " : " + att.range.x + "-" + att.range.y + " " + att.active);
-        }
-        foreach (Attribute att in physicalAttributes) {
-            Debug.Log(att.name + " : " + att.range.x + "-" + att.range.y + " " + att.active);
-        }
-        foreach (Attribute att in ancillaryAttributes) {
-            Debug.Log(att.name + " : " + att.range.x + "-" + att.range.y + " " + att.active);
-        }*/
-
-        
-        /*foreach (int i in primaryAttributes[2].inherentEffects) {
-            Debug.Log(i);
-        }*/
     }
 
     private void InitializeRuleSetAttributes(Attribute.AttributeType attributeType, string[] lines) {
