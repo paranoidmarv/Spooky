@@ -1,0 +1,30 @@
+0~
+Health Points;A measure of the character's overall physiological wellbeing. If it drops to zero, your character is dead.;0;4:5;0:1000;10;0~
+Action Points;A measure of the character's initiative. It governs how many actions the character can make in a turn. It generally regenerates at the beginning of each turn.;1;3:5;0:1000;10;1~
+Grit;A measure of the character's firmness of resolve. A high Grit allows the character to better endure the stress of misfortune. A low grit leaves the character vulnerable to psychological breaks.;2;3:4;0:1000;10;2<
+1~
+Strength;Physical Power;0;5:7:15;0:40;20;0~
+Dexterity;Physical Ability;1;1:9:12;0:40;20;1~
+Intelligence;Mental Capacity;2;4:10:13;0:40;20;2~
+Perception;Mental Sharpness;1:2;3:8:14;0:40;20;3~
+Wisdom;Mindfulness;0:2;0:11:16;0:40;20;4~
+Constitution;Total Resilience;0:1;2:6:17;0:40;20;5<
+2~
+Active Ward Count;Governed by Wisdom and enabled by taking Shaman as either a Major or Minor specialization. This Special Attribute increases the number of Wards the character can activate per turn. The character can activate an additional Ward for every 5 points of Wisdom.;4;5;0:8;4;0~
+Aim;Governed by Dexterity and enabled by taking Ballistics as either a Major or Minor specialization. This Special Attribute allows a character to expend effort in the form of Action Points to increase their accuracy or base Attack roll with ranged weapons. This is known as Focusing an ability and, specifically, Aim determines the max amount of Action Points that can be traded for accuracy when using a Ballistic weapon.;1;4;0:10;5;1~
+Covenant;Governed by Constitution and enabled by taking Witch as either a Major or Minor specialization. This Special Attribute allows a character to expend life force and effort in the form of Health Points and Actions Points to increase the Area of Effect of their offensive Spells. As with Aim, Covenant determines how many Health and Action Points can be traded for an increased Area of Effect.;5;10;0:4;2;2~
+Detect;;3;4;0:10;5;3~
+Disrupt Modes;;2;4;0:10;5;4~
+Power;;0;4;0:10;5;5~
+AP Regeneration;;5;2;;5;6~
+Carry Capacity;;0;1;;20;7~
+Find;;3;1;-20:20;0;8~
+LockPicking;;1;1;-20:20;0;9~
+Skill Points;;2;2;-10:20;10;10~
+Skill Slots;;4;5;;4;11~
+Attack;;1;2;-10:10;0;12~
+Battery Size;;2;5;0:8;4;13~
+CtC;;3;2;-10:10;0;14~
+Defense;;0;2;-10:10;0;15~
+Determination;;4;2;-10:10;0;16~
+Resilience;;5;2;-10:10;0;17<

@@ -1,0 +1,55 @@
+0~
+Health Points;A measure of the character's overall physiological wellbeing. If it drops to zero, your character is dead.;50-1000~
+Action Points;A measure of the character's initiative. It governs how many actions the character can make in a turn. It generally regenerates at the beginning of each turn.;50-1000~
+Grit;A measure of the character's firmness of resolve. A high Grit allows the character to better endure the stress of misfortune. A low grit leaves the character vulnerable to psychological breaks.;50-1000
+<
+1~
+Strength;Physical Power;0;1:32;5:10;8;36;1-100;0~
+Dexterity;Physical Ability;1;0:01:16;6:21;27;38;1-100;1~
+Intelligence;Mental Capacity;2;9:22:34;19:20;26;-25;1-100;2~
+Perception;Mental Sharpness;1:2;11:17:24;14:40;23;39;1-100;3~
+Wisdom;Spiritual Adroitness;0:2;4:34:37;12:31;35;7;1-100;4~
+Constitution;Total Resilience;0:1;3:24:33;13:29;2;-17;1-100;5
+<
+2~
+Accuracy;The character’s ability to hit their target with a Close Quarters Combat or Ballistic Weapon.;1;N/A;Strike, Shoot, Channel;N/A;int;1-100;Direct;=;Char.Accuracy;0~
+Action Point Regeneration;The amount of Actions Points the character Regenerates at the beginning of each turn.;0:01;N/A;Passive;N/A;float;1-2;Direct;*;Char.BaseAPRegeneration;1~
+Action Point Regeneration Outside of Combat;The additional Actions Points the character regenerates when not in a combat state.;5;N/A;Passive;N/A;;;;;Char.APRegenOOC;2;^~
+Action Point Return;The amount of Damage returned per Action Point when winding up a Strike. The amount of Accuracy returned per Action Point when the character begins aiming a Shot. The Durability returned per Action Point when the character places a Ward. A portion of the amount of Damage returned per Action Point when character begins Channeling a Curse.;5;N/A;Strike, Shoot, Ward, Channel;N/A;float;0.9-1.1;Direct;*;Char.APAction(AP);3~
+Area of Effect;The range of effect of Deployed Disruptors, Placed Detectors, Wards, and Channeled Curses.;4;N/A;Deploy, Place, Ward;Disruptor, Detector, Ward;;;;;ActionEntity().AreaOfEffect;4;^~
+Ballistic Control;The character’s ability to make accurate follow up Shots by overcoming the Recoil in Ballistic weapons. Reduces penalty on Accuracy for Shots fired after an initial Shot during a turn.;0;Ballistics;Shoot;N/A;float;0.5-1.5;Inverse;*;BallisticWeapon.Recoil;5~
+Ballistic:Accuracy Action Return;The amount of Accuracy returned per Action Point when the character begins aiming a Shot.;1;Ballistics;Shoot;N/A;float;0.75-1.25;Direct;*;Char.Shoot(AP);6~
+Buff Magnitude;The severity of active positive effects on the character.;4;N/A;Passive;N/A;float;1-2;Direct;*;Buff.Effect.Magnitude;7~
+Carry Capacity;The total weight a character can carry on them in the form of Weapons, Detectors, Disruptors, Tomes, and other items.;0;N/A;Passive;N/A;;;;;;8;^~
+Count;The total number of Wards, Detectors, and Disruptors that a character can maintain at one time.;2;N/A;Deploy, Place, Ward;Disruptor, Detector, Ward;;;;;;9;^~
+CQC Crit. Damage Magnitude;The severity of additional Damage dealt by character during a Critical Strike.;0;CQC;Strike;N/A;;;;;;10;^~
+Critical Chance;The character’s chance at dealing additional damage with a well-executed Close Quarters Combat Strike, Ballistic Shot, or Channeled Curse.;3;N/A;Strike, Shoot, Channel;N/A;float;1-100;Direct;=;Char.CriticalChance;11~
+Curse:Damage Health Point Return;A portion of the amount of Damage returned per Health Point when the character begins Channeling a Curse.;4;Curse Magic;Channel;N/A;float;0.8-1.2;Direct;*;Char.Channel(HP);12~
+Curse:Range;The effective range of Curses Channeled by the Character.;5;Curse Magic;Channel;;float;0.8-1.2;Direct;*;Channel.Range;13~
+D. Detection;;3;Detection;Place;Detector;;;;;;14;^~
+De-Buff Magnitude;The severity of active negative effects on the character.;5;N/A;Passive;N/A;float;1-2;Direct;*;Buff.Magnitude;15~
+Defense;The character’s ability to avoid taking Damage altogether.;1;N/A;N/A;;int;1-100;Direct;=;Char.Defense;16~
+Detection;The character’s ability to spot traps and hidden enemies.;3;N/A;Passive;N/A;;;;;;17;^~
+Detector Range;The character’s Placed detector’s ability to spot hidden enemies.;-1;Detection;Place;Detector;;;;;;18;^~
+Disruptor Duration;The duration of a Deployed Disruptor’s effects.;2;Disruption;Deploy;Disruptor;float;0.8-1.2;Direct;*;Disruptor.Duration;19~
+Disruptor Power;The amount of power a character can provide to Active Disruptors.;2;Disruption;Deploy;Disruptor;;;;;;20;^~
+Disruptor Range;The range at which a character can Deploy a Disruptor.;1;Disruption;Deploy;Disruptor;float;0.8-1.2;Direct;*;Deploy.Range;21~
+Durability;The survivability of Wards, Detectors, and Disruptors Cast, Placed, and Deployed by the character, respectively.;2;N/A;Deploy, Place, Ward;Disruptor, Detector, Ward;float;0.8-1.2;Direct;*;ActionEntity.Durability;22~
+Find;The character’s ability to spot Items and Environmental Objects with which to interact.;3;N/A;Passive;N/A;;;;;;23;^~
+Healing Magnitude;The severity of healing effects on the Character’s Health Points.;3:05;N/A;Passive;N/A;;;;;;24;^~
+Item Cost;The cost, in Action Points, of using an Item.;2;N/A;Use Item;N/A;float;0.7-1.3;Direct;*;Item.Cost;25~
+Item Magnitude;The severity in effect of an item used by this character.;2;N/A;Use Item;N/A;float;0.75-1.25;Direct;*;Item.Effect.Magnitude;26~
+Lockpicking;The character’s capacity to open locked containers and doors.;1;N/A;Pick Lock;N/A;int;1-100;Direct;=;Char.LockPicking;27~
+Max Ballistic:Accuracy Return;;-1;Ballistics;Shoot;N/A;float;1-2;Direct;*;BallisticWeapon.Dmg;28~
+Max Close-Quarters-Combat:Damage Return;The maximum amount of Action Points that can be traded for Damage per melee Strike.;5;CQC;Strike;N/A;float;1-2;Direct;*;CQCWeapon.Dmg;29~
+Max Health Point Return;;-1;Curse Magic;Channel;N/A;float;1-2;Direct;*;CurseSpell.Dmg;30~
+Max Ward:Durability Return;The maximum percentage of Actions Points that can be traded for Ward Durability per Ward.;4;Ward Magic;Cast;Ward;float;1-2;Direct;*;Char.Cast(AP);31~
+Physical Resistance;The amount of Damage blocked when taking Physical Damage.;0;N/A;Passive;N/A;float;0.85-1.15;Direct;*;IncomingDamage.Physical;32~
+Resistance;The amount of Damage blocked when taking any Damage.;5;N/A;Passive;N/A;float;0.9-1.1;Direct;*;IncomingDamage;33~
+Skill Points;The amount of skill points earned per level.;2:04;N/A;N/A;;;;;;;34;^~
+Skill Slots;The number of active Skills the character can maintain at one time. Active Skills can only be changed outside of battle.;4;N/A;N/A;N/A;;;;;;35;^~
+Speed;The cost, in Action Points, for a player to move to another grid. Subject to additional costs based on terrain type.;0;N/A;Move;N/A;float;0.5-1.5;Inverse;*;Cell.MovementCost;36~
+Spirit Resistance;The amount of Damage blocked when taking Spirit Damage.;4;N/A;Passive;N/A;float;0.85-1.15;Inverse;*;IncomingDamage.Spirit;37~
+Stealth;The character’s ability to remain unseen outside of combat. Affected by proximity, ambient noise, and lighting.;1;N/A;Sneak;N/A;;;;;;38;^~
+View Distance;The amount of area visible to the character through the fog of war.;3;N/A;Passive;N/A;;;;;;39;^~
+Ward:Range;The maximum distance at which the character can Cast a Ward.;3;Ward Magic;Cast;Ward;float;0.85-1.15;Direct;*;Ward.Range;40

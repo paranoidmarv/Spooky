@@ -1,0 +1,53 @@
+0~
+Health Points;A measure of the character's overall physiological wellbeing. If it drops to zero, your character is dead.;;;;;;0-1000;;;0;;~
+Action Points;A measure of the character's initiative. It governs how many actions the character can make in a turn. It generally regenerates at the beginning of each turn.;;;;;;0-1000;;;1;;~
+Grit;A measure of the character's firmness of resolve. A high Grit allows the character to better endure the stress of misfortune. A low grit leaves the character vulnerable to psychological breaks.;;;;;;0-1000;;;2;;<
+1~
+Strength;Physical Power;0;1:32;5:10;8;36;1-50;;;0;;~
+Dexterity;Physical Ability;1;0:1:16;6:21;27;38;1-50;;;1;;~
+Intelligence;Mental Capacity;2;9:22:34;19:20;26;25;1-50;;;2;;~
+Perception;Mental Sharpness;1:2;11:17:24;14:40;23;39;1-50;;;3;;~
+Wisdom;Spiritual Adroitness;0:2;4:34:37;12:31;35;7;1-50;;;4;;~
+Constitution;Total Resilience;0:1;3:24:33;13:29;2;17;1-50;;;5;;<
+2~
+Accuracy;The character’s ability to hit their target with a Close Quarters Combat or Ballistic Weapon.;;;;;;1-100;1;;0;;~
+Action Point Regeneration;The amount of Actions Points the character Regenerates at the beginning of each turn.;;;;;;1-2;0:1;;1;;~
+Action Point Regeneration Outside of Combat;The additional Actions Points the character regenerates when not in a combat state.;;;;;;;5;;2;^;~
+Action Point Return;The amount of Damage returned per Action Point when winding up a Strike. The amount of Accuracy returned per Action Point when the character begins aiming a Shot. The Durability returned per Action Point when the character places a Ward. A portion of the amount of Damage returned per Action Point when character begins Channeling a Curse.;;;;;;0.9-1.1;5;;3;;~
+Area of Effect;The range of effect of Deployed Disruptors, Placed Detectors, Wards, and Channeled Curses.;;;;;;;4;;4;^;~
+Ballistic Control;The character’s ability to make accurate follow up Shots by overcoming the Recoil in Ballistic weapons. Reduces penalty on Accuracy for Shots fired after an initial Shot during a turn.;;;;;;0.5-1.5;0;Ballistics;5;;~
+Ballistic:Accuracy Action Return;The amount of Accuracy returned per Action Point when the character begins aiming a Shot.;;;;;;0.75-1.25;1;Ballistics;6;;~
+Buff Magnitude;The severity of active positive effects on the character.;;;;;;1-2;4;;7;;~
+Carry Capacity;The total weight a character can carry on them in the form of Weapons, Detectors, Disruptors, Tomes, and other items.;;;;;;;0;;8;^;~
+Count;The total number of Wards, Detectors, and Disruptors that a character can maintain at one time.;;;;;;;2;;9;^;~
+CQC Crit. Damage Magnitude;The severity of additional Damage dealt by character during a Critical Strike.;;;;;;;0;CQC;10;^;~
+Critical Chance;The character’s chance at dealing additional damage with a well-executed Close Quarters Combat Strike, Ballistic Shot, or Channeled Curse.;;;;;;1-100;3;;11;;~
+Curse:Damage Health Point Return;A portion of the amount of Damage returned per Health Point when the character begins Channeling a Curse.;;;;;;0.8-1.2;4;Curse Magic;12;;~
+Curse:Range;The effective range of Curses Channeled by the Character.;;;;;;0.8-1.2;5;Curse Magic;13;;~
+D. Detection;;;;;;;;3;Detection;14;^;~
+De-Buff Magnitude;The severity of active negative effects on the character.;;;;;;1-2;5;;15;;~
+Defense;The character’s ability to avoid taking Damage altogether.;;;;;;1-100;1;;16;;~
+Detection;The character’s ability to spot traps and hidden enemies.;;;;;;;3;;17;^;~
+Detector Range;The character’s Placed detector’s ability to spot hidden enemies.;;;;;;;1;Detection;18;^;~
+Disruptor Duration;The duration of a Deployed Disruptor’s effects.;;;;;;0.8-1.2;2;Disruption;19;;~
+Disruptor Power;The amount of power a character can provide to Active Disruptors.;;;;;;;2;Disruption;20;^;~
+Disruptor Range;The range at which a character can Deploy a Disruptor.;;;;;;0.8-1.2;1;Disruption;21;;~
+Durability;The survivability of Wards, Detectors, and Disruptors Cast, Placed, and Deployed by the character, respectively.;;;;;;0.8-1.2;2;;22;;~
+Find;The character’s ability to spot Items and Environmental Objects with which to interact.;;;;;;;3;;23;^;~
+Healing Magnitude;The severity of healing effects on the Character’s Health Points.;;;;;;;3:5;;24;^;~
+Item Cost;The cost, in Action Points, of using an Item.;;;;;;0.7-1.3;2;;25;;~
+Item Magnitude;The severity in effect of an item used by this character.;;;;;;0.75-1.25;2;;26;;~
+Lockpicking;The character’s capacity to open locked containers and doors.;;;;;;1-100;1;;27;;~
+Max Ballistic:Accuracy Return;;;;;;;1-2;-1;Ballistics;28;;~
+Max Close-Quarters-Combat:Damage Return;The maximum amount of Action Points that can be traded for Damage per melee Strike.;;;;;;1-2;5;CQC;29;;~
+Max Health Point Return;;;;;;;1-2;1;Curse Magic;30;;~
+Max Ward:Durability Return;The maximum percentage of Actions Points that can be traded for Ward Durability per Ward.;;;;;;1-2;4;Ward Magic;31;;~
+Physical Resistance;The amount of Damage blocked when taking Physical Damage.;;;;;;0.85-1.15;0;;32;;~
+Resistance;The amount of Damage blocked when taking any Damage.;;;;;;0.9-1.1;5;;33;;~
+Skill Points;The amount of skill points earned per level.;;;;;;;2:4;;34;^;~
+Skill Slots;The number of active Skills the character can maintain at one time. Active Skills can only be changed outside of battle.;;;;;;;4;;35;^;~
+Speed;The cost, in Action Points, for a player to move to another grid. Subject to additional costs based on terrain type.;;;;;;;0;;36;^;~
+Spirit Resistance;The amount of Damage blocked when taking Spirit Damage.;;;;;;;4;;37;^;~
+Stealth;The character’s ability to remain unseen outside of combat. Affected by proximity, ambient noise, and lighting.;;;;;;;1;;38;^;~
+View Distance;The amount of area visible to the character through the fog of war.;;;;;;;3;;39;^;~
+Ward:Range;The maximum distance at which the character can Cast a Ward.;;;;;;;3;Ward Magic;40;^;<
