@@ -104,18 +104,21 @@ public class CharacterCreator : MonoBehaviour {
                 //=== Plus Button ===
                 GameObject newMinusButton = Instantiate(ccButton);
                 newMinusButton.transform.SetParent(pAS.transform);
+                newMinusButton.transform.localScale = new Vector3(1, 1, 1);
                 newMinusButton.name = "- " + attributes[i].ID;
                 newMinusButton.GetComponentInChildren<Text>().text = "-";
                 newMinusButton.GetComponent<Button>().onClick.AddListener(ModifyPhysicalAttribute);
                 //=== Field ===
                 GameObject newField = Instantiate(ccField);
                 newField.transform.SetParent(pAS.transform);
+                newField.transform.localScale = new Vector3(1, 1, 1);
                 phAttributeFields[i] = newField.GetComponent<Text>();
                 phAttributeFields[i].alignment = TextAnchor.UpperCenter;
                 phAttributeFields[i].text = GetNameAfterReturn(attributes[i].name);
                 //=== Minus Button ===
                 GameObject newPlusButton = Instantiate(ccButton);
                 newPlusButton.transform.SetParent(pAS.transform);
+                newPlusButton.transform.localScale = new Vector3(1, 1, 1);
                 newPlusButton.name = "+ " + attributes[i].ID;
                 newPlusButton.GetComponentInChildren<Text>().text = "+";
                 newPlusButton.GetComponent<Button>().onClick.AddListener(ModifyPhysicalAttribute);
@@ -125,6 +128,7 @@ public class CharacterCreator : MonoBehaviour {
             for(int i = 0; i < attributes.Count; i++) {
                 GameObject newField = Instantiate(ccField);
                 newField.transform.SetParent(dAP.transform);
+                newField.transform.localScale = new Vector3(1, 1, 1);
                 aAttNames.Add(GetNameAfterReturn(attributes[i].name));
                 aAttributeFields[i] = newField.GetComponent<Text>();
                 aAttributeFields[i].text = aAttNames[i] + ": ";
