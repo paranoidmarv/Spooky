@@ -7,17 +7,17 @@ using System.Collections;
 public class CharacterCreator : MonoBehaviour {
     public GameObject pAS;
     public GameObject dAP;
-    public GameObject ccButton;
-    public GameObject ccField;
-    public Text attPointsField;
+    //public GameObject ccButton;
+    //public GameObject ccField;
+    public UILabel attPointsField;
     private Sprite newCharSprite;
     private string newCharName;
     public GameObject characterPrefab;
     public Character newCharacter;
     private UIManager uiManager;
     private bool creatorInitialized;
-    private Text[] phAttributeFields;
-    private Text[] aAttributeFields;
+    private UILabel[] phAttributeFields;
+    private UILabel[] aAttributeFields;
     private List<string> aAttNames;
 
     public int allottedPoints;
@@ -48,8 +48,9 @@ public class CharacterCreator : MonoBehaviour {
         }
     }
 	
-    public void ModifyPhysicalAttribute() {
-        string[] buttonName = EventSystem.current.currentSelectedGameObject.name.Split(' ');
+    public void ModifyPhysicalAttribute(string bN) {
+        
+        string[] buttonName = bN.Split(' ');
         if (buttonName.Length == 2) {
             int id;
             int.TryParse(buttonName[1], out id);
@@ -70,7 +71,8 @@ public class CharacterCreator : MonoBehaviour {
             int[] derivedAttIDs = newCharacter.GetDerivedAttributeIDs(id);
             foreach (int derivedAttID in derivedAttIDs) {
                 //string[] field = aAttributeFields[derivedAttID].text.Split(' ');
-                aAttributeFields[Mathf.Abs(derivedAttID)].text = aAttNames[derivedAttID] + ": " + newCharacter.GetAncillayrAttributeValue(derivedAttID);
+                Debug.Log(derivedAttID);
+                aAttributeFields[derivedAttID].text = aAttNames[derivedAttID] + ": " + newCharacter.GetAncillayrAttributeValue(derivedAttID);
                 //aAttributeFields[derivedAttID].text 
             }
             attPointsField.text = "Attribute Points: " + attributePoints.ToString();
@@ -99,10 +101,13 @@ public class CharacterCreator : MonoBehaviour {
     public bool InitializeCreatorPanel() {
         if (uiManager.sceneManager.sceneReady) {
             List<Attribute> attributes = uiManager.sceneManager.ruleSetEngine.physicalAttributes;
-            phAttributeFields = new Text[attributes.Count];
+            phAttributeFields = new UILabel[attributes.Count];
             for(int i = 0; i < attributes.Count; i++) {
+                string[] temp = attributes[i].name.Split('\n');
+                phAttributeFields[i] = GameObject.Find(temp[1]).GetComponent<UILabel>();
+                //=== UGUI CODE =================================================================================
                 //=== Plus Button ===
-                GameObject newMinusButton = Instantiate(ccButton);
+                /*GameObject newMinusButton = Instantiate(ccButton);
                 newMinusButton.transform.SetParent(pAS.transform);
                 newMinusButton.transform.localScale = new Vector3(1, 1, 1);
                 newMinusButton.name = "- " + attributes[i].ID;
@@ -121,17 +126,25 @@ public class CharacterCreator : MonoBehaviour {
                 newPlusButton.transform.localScale = new Vector3(1, 1, 1);
                 newPlusButton.name = "+ " + attributes[i].ID;
                 newPlusButton.GetComponentInChildren<Text>().text = "+";
-                newPlusButton.GetComponent<Button>().onClick.AddListener(ModifyPhysicalAttribute);
+                newPlusButton.GetComponent<Button>().onClick.AddListener(ModifyPhysicalAttribute);*/
+                //=== UGUI CODE =================================================================================
             }
             attributes = uiManager.sceneManager.ruleSetEngine.ancillaryAttributes;
-            aAttributeFields = new Text[attributes.Count];
+            aAttributeFields = new UILabel[attributes.Count];
             for(int i = 0; i < attributes.Count; i++) {
-                GameObject newField = Instantiate(ccField);
+                Debug.Log(attributes[i].name);
+                string[] temp = attributes[i].name.Split('\n');
+                aAttributeFields[i] = GameObject.Find(temp[1]).GetComponent<UILabel>();
+                aAttNames.Add(GetNameAfterReturn(attributes[i].name));
+                Debug.Log(aAttributeFields[i].name);
+                //=== UGUI CODE =================================================================================
+                /*GameObject newField = Instantiate(ccField);
                 newField.transform.SetParent(dAP.transform);
                 newField.transform.localScale = new Vector3(1, 1, 1);
                 aAttNames.Add(GetNameAfterReturn(attributes[i].name));
                 aAttributeFields[i] = newField.GetComponent<Text>();
-                aAttributeFields[i].text = aAttNames[i] + ": ";
+                aAttributeFields[i].text = aAttNames[i] + ": ";*/
+                //=== UGUI CODE =================================================================================
             }
             return true;
         }

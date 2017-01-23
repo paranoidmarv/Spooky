@@ -16,7 +16,7 @@ public class SceneManager : MonoBehaviour {
         sceneMap = GameObject.Find("Map").GetComponent<Map>();
         playerHandler = GameObject.Find("Player Manager").GetComponent<PlayerHandler>();
         ruleSetEngine = GameObject.Find("Player Manager").GetComponent<RuleSetEngine>();
-        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        uiManager = GameObject.Find("UI Root").GetComponent<UIManager>();
         sceneMap.MakeMap();
         StartCoroutine(GetCharacters());
 	}
