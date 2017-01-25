@@ -27,6 +27,7 @@ public class PlayerInput : MonoBehaviour {
             if (Input.GetKey(KeyCode.A)) { moveVector += new Vector2(-1f, 0); }
             if (Input.GetKey(KeyCode.D)) { moveVector += new Vector2(1f, 0); }
         }
+        else if (Input.GetKeyUp(KeyCode.Return)) { PlayerHandler.EndTurn(); }
         if(mouseButton != -1) {
             GameObject clickedGO = GetClickedGameObject();
             if (clickedGO != null) { PlayerHandler.Event(mouseButton, clickedGO); }

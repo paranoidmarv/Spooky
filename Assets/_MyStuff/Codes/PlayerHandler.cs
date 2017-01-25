@@ -74,7 +74,8 @@ public class PlayerHandler : MonoBehaviour {
                 case PlayerState.CharacterSelected:
                     if (mouseButton == 0) {
                         if (clickedObject.tag == "Character" && clickedObject.GetInstanceID() == instance.currentSelection.GetInstanceID()) {
-                            break;
+                            Debug.Log("self");
+                            instance.acceptingInput = true;
                         }
                         else if (clickedObject.tag == "Character" || clickedObject.tag == "Enemy") {
                             instance.DisengageMoveContext();
@@ -111,6 +112,13 @@ public class PlayerHandler : MonoBehaviour {
 
         //in game
         instance.MoveCamera(new Vector3(moveVector.x, moveVector.y, 0f));
+    }
+
+    public static void EndTurn() {
+        if (instance.acceptingInput) {
+            instance.acceptingInput = false;
+            if (instance.GetComponent<RuleSetEngine>().EndTurn()) { instance.StartCoroutine(instance.EnableInput()); }
+        }
     }
     //
     private void SelectObject(GameObject clickedObject) {

@@ -22,9 +22,6 @@ public class Character : MonoBehaviour {
     private bool movePathsDiscovered;
     public TextAsset characterTemplate;
     //--- hardcode temporary template
-    int defaultPrimaryHP = 250;
-    int defaultPrimaryAP = 50;
-    int defaultPhysical = 20;
     //----------------------------------------------------------------------------------------------------------------------------------------------//
 
     //--- Primary Attributes                                                                                                                        
@@ -80,14 +77,20 @@ public class Character : MonoBehaviour {
         moveCost = 0;
         playerHandler.AcceptingInput = true;
     }
+    public void UpdateCharacter() {
+        //check all end of turn modifiers
+        if (currentActionPoints < primaryMap[1].Second) {
+            ModifyActionPoints(ancillaryMap[ancillaryList.IndexOf("AP Regeneration")].Second);
+        }
+    }
     //--- Primary Attribute methods
     private void ModifyHealthPoints(int changeHP) {
-        if (currentHealth + changeHP > primaryMap[0].First.attributeRange.Second) { currentHealth = primaryMap[0].First.attributeRange.Second; }//make condition for buffed health points
+        if (currentHealth + changeHP > primaryMap[0].Second) { currentHealth = primaryMap[0].Second; }//make condition for buffed health points
         else if (currentHealth + changeHP <= 0) { currentHealth = 0; }// code for you're dead
         else { currentHealth += changeHP; }
     }
     private void ModifyActionPoints(int changeAP) {
-        if (currentActionPoints + changeAP > primaryMap[1].First.attributeRange.Second) { currentActionPoints = primaryMap[1].First.attributeRange.Second; }//make condition for buffed action points
+        if (currentActionPoints + changeAP > primaryMap[1].Second) { currentActionPoints = primaryMap[1].Second; }//make condition for buffed action points
         else if (currentActionPoints + changeAP <= 0) { currentActionPoints = 0; }
         else { currentActionPoints += changeAP; }
         playerHandler.DisengageMoveContext();
@@ -132,14 +135,11 @@ public class Character : MonoBehaviour {
     //----------------------------------------------------------------------------------------------------------------------------------------------//
     public void InitializeCharacterAttributes(List<Attribute> pAttributes, List<Attribute> phAttributes, List<Attribute> aAttributes) {
         foreach(Attribute att in pAttributes) {
-            int defValue;
-            if(att.ID == 0) { defValue = defaultPrimaryHP; }
-            else { defValue = defaultPrimaryAP; }
             primaryMap.Add(att.ID, new Tuple<Attribute, int>(att, att.defaultValue));
             primaryList.Add(att.name);
         }
-        currentHealth = defaultPrimaryHP;
-        currentActionPoints = defaultPrimaryAP;
+        currentHealth = primaryMap[0].Second;
+        currentActionPoints = primaryMap[1].Second;
         foreach (Attribute att in phAttributes) {
             physicalMap.Add(att.ID, new Tuple<Attribute, int>(att, att.defaultValue));
             physicalList.Add(att.name);
@@ -152,12 +152,23 @@ public class Character : MonoBehaviour {
         //PrintAttributes();
     }
     public void ModifyAttribute(int attID, Attribute.AttributeType type, int modValue) {
-        if(type == Attribute.AttributeType.Physical) {
+        if (type == Attribute.AttributeType.Physical) {
             physicalMap[attID].Second += modValue;
+            foreach(int pAttID in physicalMap[attID].First.primaryEffects) {
+                primaryMap[pAttID].Second = ComputePrimaryValue(pAttID);
+            }
             foreach (int derivedAttID in GetDerivedAttributeIDs(attID)) {
                 ancillaryMap[derivedAttID].Second = ComputeAncillaryValue(derivedAttID);
             }
         }
+    }
+    private void ApplyNewMax(int attID) {
+        if(attID == 0) { currentHealth = primaryMap[0].Second; }
+        else if(attID == 1) { currentActionPoints = primaryMap[2].Second; }
+    }
+    public void ResetPrimaryAttributes() {
+        currentHealth = primaryMap[0].Second;
+        currentActionPoints = primaryMap[1].Second;
     }
     //-----------------------------------------------------------------------------
     public int GetPhysicalAttributeValue(int attID) {
@@ -195,6 +206,22 @@ public class Character : MonoBehaviour {
         int phAttID = ancillaryMap[attID].First.parentedPhysicalAttribute;
         int mod = Mathf.FloorToInt((physicalMap[phAttID].Second - physicalMap[phAttID].First.defaultValue) / ancillaryMap[attID].First.attributeRatio);
         return ancillaryMap[attID].First.defaultValue + mod;
+    }
+    private int ComputePrimaryValue(int attID) {
+        int newValue = primaryMap[attID].First.defaultValue;
+        //Needs check if primary attribute is directly modified by buff/debuff
+        if (physicalMap[primaryMap[attID].First.fullPhysicalEffect].Second >= physicalMap[primaryMap[attID].First.fullPhysicalEffect].First.defaultValue) {
+            newValue += physicalMap[primaryMap[attID].First.fullPhysicalEffect].Second - physicalMap[primaryMap[attID].First.fullPhysicalEffect].First.defaultValue;
+        }
+        foreach (int attHalfID in primaryMap[attID].First.halfPhysicalEffect) {
+            if (physicalMap[attHalfID].Second >= physicalMap[attHalfID].First.defaultValue) {
+                newValue += Mathf.FloorToInt((physicalMap[attHalfID].Second - physicalMap[attHalfID].First.defaultValue) / 2);
+            }
+        }
+        return newValue;
+    }
+    public int[] GetPrimaryAttributeIDs() {
+        return new int[] { 0, 1, 2 }; 
     }
     public int[] GetDerivedAttributeIDs(int attID) {
         List<int> derivedAttributes = new List<int>();

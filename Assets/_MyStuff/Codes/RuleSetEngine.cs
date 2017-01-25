@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -7,15 +8,36 @@ public class RuleSetEngine : MonoBehaviour {
     public List<Attribute> physicalAttributes;
     public List<Attribute> ancillaryAttributes;
     public bool isRuleSetLoaded { get; private set; }
-
     public TextAsset ruleSet;
-    // Use this for initialization
+    //=== Turn Variables ==========================================
+    private int elapsedTime;
+    private int turnsTaken;
+    public int TurnsTaken { get { return turnsTaken; } }
+    public int timePerTurn;
+    //=== References ==============================================
+    private PlayerHandler pH;
+    private SceneManager sC;
     void Awake () {
         primaryAttributes = new List<Attribute>();
         physicalAttributes = new List<Attribute>();
         ancillaryAttributes = new List<Attribute>();
         isRuleSetLoaded = false;
         LoadRuleSet();
+        //=== Turn Variables
+        elapsedTime = 0;
+        turnsTaken = 0;
+        //=== References
+        pH = GetComponent<PlayerHandler>();
+        sC = GetComponent<SceneManager>();
+    }
+
+    public bool EndTurn() {
+        foreach(Character character in sC.characters){
+            character.UpdateCharacter();
+        }
+        elapsedTime += timePerTurn;
+        turnsTaken++;
+        return true;
     }
 
     private void LoadRuleSet() {
@@ -38,7 +60,7 @@ public class RuleSetEngine : MonoBehaviour {
         List<Attribute> temp = new List<Attribute>();
         for (int i = 1; i < lines.Length; i++) {
             string[] entries = lines[i].Split(';');
-            temp.Add(new Attribute(attributeType, entries[0], entries[1], entries));
+            temp.Add(new Attribute(attributeType, entries[0].Split('\n')[1], entries[1], entries));
             if(entries[entries.Length - 1] == "^") {
                 temp[temp.Count - 1].active = false;
             }

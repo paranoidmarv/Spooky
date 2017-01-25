@@ -25,7 +25,7 @@ public class CharacterCreator : MonoBehaviour {
 
     void Awake() {
         Debug.Log("awake");
-        uiManager = transform.parent.gameObject.GetComponent<UIManager>();
+        uiManager = GameObject.Find("UI Root").GetComponent<UIManager>();
         aAttNames = new List<string>();
         creatorInitialized = InitializeCreatorPanel(); 
     }
@@ -71,16 +71,17 @@ public class CharacterCreator : MonoBehaviour {
             int[] derivedAttIDs = newCharacter.GetDerivedAttributeIDs(id);
             foreach (int derivedAttID in derivedAttIDs) {
                 //string[] field = aAttributeFields[derivedAttID].text.Split(' ');
-                Debug.Log(derivedAttID);
                 aAttributeFields[derivedAttID].text = aAttNames[derivedAttID] + ": " + newCharacter.GetAncillayrAttributeValue(derivedAttID);
                 //aAttributeFields[derivedAttID].text 
             }
+            newCharacter.ResetPrimaryAttributes();
             attPointsField.text = "Attribute Points: " + attributePoints.ToString();
         }
     }
 
     public void PlaceCharacter() {
         uiManager.sceneManager.sceneMap.placingNewCharacter = true;
+        
         uiManager.sceneManager.AddNewCharacter(newCharacter.gameObject);
         newCharacter.gameObject.AddComponent<PlaceNewCharacter>();
         newCharacter = null;
@@ -90,11 +91,11 @@ public class CharacterCreator : MonoBehaviour {
     private void InitializePanelValues() {
         List<Attribute> attributes = uiManager.sceneManager.ruleSetEngine.physicalAttributes;
         foreach(Attribute att in attributes) {
-            phAttributeFields[att.ID].text = GetNameAfterReturn(att.name) + "\n" + att.defaultValue.ToString();
+            phAttributeFields[att.ID].text = att.name + "\n" + att.defaultValue.ToString();
         }
         attributes = uiManager.sceneManager.ruleSetEngine.ancillaryAttributes;
         foreach(Attribute att in attributes) {
-            aAttributeFields[att.ID].text = GetNameAfterReturn(att.name) + ": " + att.defaultValue.ToString();
+            aAttributeFields[att.ID].text = att.name + ": " + att.defaultValue.ToString();
         }
     }
 
@@ -103,8 +104,7 @@ public class CharacterCreator : MonoBehaviour {
             List<Attribute> attributes = uiManager.sceneManager.ruleSetEngine.physicalAttributes;
             phAttributeFields = new UILabel[attributes.Count];
             for(int i = 0; i < attributes.Count; i++) {
-                string[] temp = attributes[i].name.Split('\n');
-                phAttributeFields[i] = GameObject.Find(temp[1]).GetComponent<UILabel>();
+                phAttributeFields[i] = GameObject.Find(attributes[i].name).GetComponent<UILabel>();
                 //=== UGUI CODE =================================================================================
                 //=== Plus Button ===
                 /*GameObject newMinusButton = Instantiate(ccButton);
@@ -132,11 +132,8 @@ public class CharacterCreator : MonoBehaviour {
             attributes = uiManager.sceneManager.ruleSetEngine.ancillaryAttributes;
             aAttributeFields = new UILabel[attributes.Count];
             for(int i = 0; i < attributes.Count; i++) {
-                Debug.Log(attributes[i].name);
-                string[] temp = attributes[i].name.Split('\n');
-                aAttributeFields[i] = GameObject.Find(temp[1]).GetComponent<UILabel>();
-                aAttNames.Add(GetNameAfterReturn(attributes[i].name));
-                Debug.Log(aAttributeFields[i].name);
+                aAttributeFields[i] = GameObject.Find(attributes[i].name).GetComponent<UILabel>();
+                aAttNames.Add(attributes[i].name);
                 //=== UGUI CODE =================================================================================
                 /*GameObject newField = Instantiate(ccField);
                 newField.transform.SetParent(dAP.transform);

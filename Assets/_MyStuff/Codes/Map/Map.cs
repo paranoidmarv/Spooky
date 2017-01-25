@@ -139,7 +139,7 @@ public class Map : MonoBehaviour {
 
     public int GetCellWeight(Tuple<int, int> cellPos) {
         //Implement move cost on tiles
-        return 10;
+        return 5;
         //Implement move cost on tiles
     }
 

@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
         //characterCreationPanel = GameObject.Find("Character Creation Panel");
-        sceneManager = GameObject.Find("Scene Manager").GetComponent<SceneManager>();
+        sceneManager = GameObject.Find("Player Manager").GetComponent<SceneManager>();
     }
 	
 	// Update is called once per frame
