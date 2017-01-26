@@ -9,7 +9,7 @@ public class PlayerHandler : MonoBehaviour {
     to player.
     */
     public static PlayerHandler instance = null;
-    public enum PlayerState { NothingSelected, InMenu, CharacterSelected, EnemySelected };
+    public enum PlayerState { NothingSelected, InMenu, CharacterSelected, TargetingEnemies, EnemySelected };
     //InWorld = navigating grid overworld
     //InMenu = events are being driven by GUI
     //SomethingSelected = currentSelection is not null
@@ -17,6 +17,7 @@ public class PlayerHandler : MonoBehaviour {
     public PlayerState currentState; //shouldn't be public
     public GameObject currentSelection; //shouldn't be public
     public Character currentSelectedCharacter;
+    public Character currentTarget;
     private bool acceptingInput;
     public bool AcceptingInput {
         set { acceptingInput = value; }
@@ -38,7 +39,9 @@ public class PlayerHandler : MonoBehaviour {
 
         acceptingInput = true;
 	}
-    //--- Input Manager
+    //==================================================================================================================
+    //=== Input Manager
+    //==================================================================================================================
     public static void Event(int mouseButton, GameObject clickedObject) {
         if (instance.acceptingInput && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
             instance.acceptingInput = false;
@@ -97,11 +100,15 @@ public class PlayerHandler : MonoBehaviour {
                             instance.MoveTo(instance.currentSelection, clickedObject);
                         }
                         else if (clickedObject.tag == "Character" || clickedObject.tag == "Enemy") {
-                            instance.acceptingInput = true;
+                            instance.acceptingInput = false;
+                            instance.currentTarget = clickedObject.GetComponent<Character>();
+                            instance.EngageTargetContext();
                         }
                         //if(clickedObject.tag == "Enemy") {}
                         //if(clickedObject.tag == "Character") {}
                     }
+                    break;
+                case PlayerState.TargetingEnemies:
                     break;
             }
 
@@ -113,14 +120,15 @@ public class PlayerHandler : MonoBehaviour {
         //in game
         instance.MoveCamera(new Vector3(moveVector.x, moveVector.y, 0f));
     }
+    public static void Event() {
 
+    }
     public static void EndTurn() {
         if (instance.acceptingInput) {
             instance.acceptingInput = false;
             if (instance.GetComponent<RuleSetEngine>().EndTurn()) { instance.StartCoroutine(instance.EnableInput()); }
         }
     }
-    //
     private void SelectObject(GameObject clickedObject) {
         currentSelection = clickedObject;
         instance.currentState = PlayerState.CharacterSelected;
@@ -143,14 +151,12 @@ public class PlayerHandler : MonoBehaviour {
         }
         currentSelectedCharacter.Move(positionList, destination.GetComponent<Cell>(), moveCost * -1);
     }
-
     //--- Utility
     private void GetMapReference() {
         map = GameObject.Find("Map").GetComponent<Map>();
         ClearSelection();
     }
     public void FinishedPlacingNewCharacter() {
-        //instance.currentSelection.GetComponent<PlaceNewCharacter>().PlaceCharacter();
         ClearSelection();
         StartCoroutine(EnableInput());
     }
@@ -158,7 +164,12 @@ public class PlayerHandler : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
         instance.acceptingInput = true;
     }
-    //--- Context Methods
+    void ShowSelectionInfo() {
+        if (currentState == PlayerState.CharacterSelected) { currentSelectedCharacter.PrintAttributes(); }
+    }
+    //================================================================================================================================================
+    //=== Context Methods
+    //================================================================================================================================================
     public void EngageMoveContext() {
         if (currentSelectedCharacter != null) {
             List<Cell> cellsToHighLight = currentSelectedCharacter.GetMovePaths();
@@ -187,7 +198,6 @@ public class PlayerHandler : MonoBehaviour {
         }
         //ShowSelectionInfo();
     }
-
     public void DisengageMoveContext() {
         if (currentSelectedCharacter != null) {
             List<Cell> movPaths = currentSelectedCharacter.GetMovePaths();
@@ -198,10 +208,23 @@ public class PlayerHandler : MonoBehaviour {
             }
         }
     }
-
-    void ShowSelectionInfo() {
-        if(currentState == PlayerState.CharacterSelected) {
-            currentSelectedCharacter.PrintAttributes();
+    public void EngageTargetContext() {
+        if(currentSelectedCharacter != null && currentTarget != null) {
+            switch (currentTarget.Type) {
+                case Character.CharacterType.Enemy:
+                    instance.currentState = PlayerState.TargetingEnemies;
+                    EngageTargetEnemyContext();
+                    break;
+            }
         }
+    }
+    public void DisengageTargetContext() {
+
+    }
+    public void EngageTargetEnemyContext() {
+
+    }
+    public void EngagePowerContext() {
+
     }
 }

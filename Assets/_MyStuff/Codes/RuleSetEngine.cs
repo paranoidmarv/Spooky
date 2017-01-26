@@ -7,6 +7,10 @@ public class RuleSetEngine : MonoBehaviour {
     public List<Attribute> primaryAttributes;
     public List<Attribute> physicalAttributes;
     public List<Attribute> ancillaryAttributes;
+
+    public List<Profession> professions;
+    public List<Specialization> specializations;
+    public List<Skill> skill;
     public bool isRuleSetLoaded { get; private set; }
     public TextAsset ruleSet;
     //=== Turn Variables ==========================================

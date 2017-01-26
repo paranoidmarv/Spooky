@@ -3,7 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Character : MonoBehaviour {
-    //--- Utility Variables
+    public enum CharacterType { Friendly, Neutral, Enemy }
+    public bool isPlayerControlled;
+    private CharacterType type;
+    public CharacterType Type { get { return type; } }
+    public void SetCharacterType(CharacterType cT) {
+        //%%%%%%%%%%%%%%%%%%%%%Change Tag
+        type = cT;
+    }
+    //==== Utility Variables
     public int cellX, cellY;
     private Cell currentCell;
     public Cell CurrentCell {
@@ -14,26 +22,32 @@ public class Character : MonoBehaviour {
         get { return playerHandler; }
         set { playerHandler = value; }
     }
+    public TextAsset characterTemplate;
+    //===============================================================================
+    //=== Action Variables
+    //===============================================================================
+    //=== Move
     public float moveAnimationSpeed;
     public float moveDuration;
     public bool moving;
-
     private List<Cell> movePaths;
     private bool movePathsDiscovered;
-    public TextAsset characterTemplate;
-    //--- hardcode temporary template
-    //----------------------------------------------------------------------------------------------------------------------------------------------//
 
+    private Inventory inventory;
+
+    //===============================================================================
+    //=== Attribute Maps
+    //===============================================================================
     //--- Primary Attributes                                                                                                                        
-    private Dictionary<int, Tuple<Attribute, int>> primaryMap;
-    private List<string> primaryList;
+    protected Dictionary<int, Tuple<Attribute, int>> primaryMap;
+    protected List<string> primaryList;
     public int currentHealth, currentActionPoints;
     //--- Physical Attributes
-    private Dictionary<int, Tuple<Attribute, int>> physicalMap;
-    private List<string> physicalList;
+    protected Dictionary<int, Tuple<Attribute, int>> physicalMap;
+    protected List<string> physicalList;
     //--- Ancillary Attributes
-    private Dictionary<int, Tuple<Attribute, int>> ancillaryMap;
-    private List<string> ancillaryList;
+    protected Dictionary<int, Tuple<Attribute, int>> ancillaryMap;
+    protected List<string> ancillaryList;
 
     //----------------------------------------------------------------------------------------------------------------------------------------------//
     void Awake() {
@@ -43,39 +57,18 @@ public class Character : MonoBehaviour {
         physicalList = new List<string>();
         ancillaryMap = new Dictionary<int, Tuple<Attribute, int>>();
         ancillaryList = new List<string>();
+        inventory = GetComponent<Inventory>();
         movePaths = new List<Cell>();
         movePathsDiscovered = false;
         moving = false;
-
-        //currentActionPoints = maxActionPoints;
     }
-    //----------------------------------------------------------------------------------------------------------------------------------------------//
-
-    //--- Actions
-
-    //----------------------------------------------------------------------------------------------------------------------------------------------//
+    //=================================================================================================================================================
+    //=== Actions
+    //=================================================================================================================================================
     private int moveCost = 0;
     public void Move(List<Vector3> moveToPath, Cell newCurrentCell, int movCost) {
         moveCost = movCost;
         StartCoroutine("MoveTween", new Tuple<List<Vector3>, Cell>(moveToPath, newCurrentCell));
-    }
-
-    private IEnumerator MoveTween(Tuple<List<Vector3>, Cell> moveToArgs) {
-        moving = true;
-        //currentCell.isOccupied = false;
-        //Add check for same direction movement to smooth animation and reduce calls
-        for (int i = 0; i < moveToArgs.First.Count; i++) {
-            iTween.MoveTo(gameObject, iTween.Hash(
-                "position", moveToArgs.First[i],
-                "time", moveAnimationSpeed
-            ));
-            yield return new WaitForSeconds(moveDuration);
-        }
-        SetCell(moveToArgs.Second);
-        moving = false;
-        ModifyActionPoints(moveCost);
-        moveCost = 0;
-        playerHandler.AcceptingInput = true;
     }
     public void UpdateCharacter() {
         //check all end of turn modifiers
@@ -83,7 +76,15 @@ public class Character : MonoBehaviour {
             ModifyActionPoints(ancillaryMap[ancillaryList.IndexOf("AP Regeneration")].Second);
         }
     }
-    //--- Primary Attribute methods
+    public void UseWeapon(int weaponIndex) {
+        if(inventory.equippedWeapons[weaponIndex].itemType == Item.ItemType.CQCWeapon) {
+            CQCWeapon wep = (CQCWeapon)inventory.equippedWeapons[weaponIndex];
+            wep.Strike();
+        }
+    }
+    //=================================================================================================================================================
+    //=== Primary Attribute methods
+    //=================================================================================================================================================
     private void ModifyHealthPoints(int changeHP) {
         if (currentHealth + changeHP > primaryMap[0].Second) { currentHealth = primaryMap[0].Second; }//make condition for buffed health points
         else if (currentHealth + changeHP <= 0) { currentHealth = 0; }// code for you're dead
@@ -112,11 +113,9 @@ public class Character : MonoBehaviour {
         movePaths.Clear();
         movePathsDiscovered = false;
     }
-    //----------------------------------------------------------------------------------------------------------------------------------------------//
-
-    //--- Cell Methods
-
-    //----------------------------------------------------------------------------------------------------------------------------------------------//
+    //===============================================================================================================================================
+    //=== Cell Methods
+    //===============================================================================================================================================
     public void SetCell(Cell newCurrentCell) {
         if (currentCell != null) {
             currentCell.isOccupied = false;
@@ -128,11 +127,9 @@ public class Character : MonoBehaviour {
     private void SetToCellPosition() {
         transform.position = new Vector3(currentCell.Position.First, currentCell.Position.Second, -1f);
     }
-    //----------------------------------------------------------------------------------------------------------------------------------------------//
-
-    //--- Attribute Methods
-
-    //----------------------------------------------------------------------------------------------------------------------------------------------//
+    //===============================================================================================================================================
+    //=== Attribute Methods
+    //===============================================================================================================================================
     public void InitializeCharacterAttributes(List<Attribute> pAttributes, List<Attribute> phAttributes, List<Attribute> aAttributes) {
         foreach(Attribute att in pAttributes) {
             primaryMap.Add(att.ID, new Tuple<Attribute, int>(att, att.defaultValue));
@@ -162,25 +159,7 @@ public class Character : MonoBehaviour {
             }
         }
     }
-    private void ApplyNewMax(int attID) {
-        if(attID == 0) { currentHealth = primaryMap[0].Second; }
-        else if(attID == 1) { currentActionPoints = primaryMap[2].Second; }
-    }
-    public void ResetPrimaryAttributes() {
-        currentHealth = primaryMap[0].Second;
-        currentActionPoints = primaryMap[1].Second;
-    }
-    //-----------------------------------------------------------------------------
-    public int GetPhysicalAttributeValue(int attID) {
-        return physicalMap[attID].Second;
-    }
 
-    public float GetAncillayrAttributeValue(int attID) {
-        return ancillaryMap[attID].Second;
-    }
-    public string GetPhysicalAttributeName(int attID) {
-        return physicalList[attID];
-    }
     /*public int GetAttributeID(Attribute.AttributeType attType, string attName) {
         if(attType == Attribute.AttributeType.Physical) { return physicalMap[attName].First.ID; }
         else { return -1; }
@@ -196,9 +175,6 @@ public class Character : MonoBehaviour {
         foreach (string att in ancillaryList) {
             Debug.Log(att + " : " + ancillaryMap[ancillaryList.IndexOf(att)].Second);
         }
-    }
-    private void ComputePrimaryValue() {
-
     }
     //--- Computes and returns the value of a derived ancillary attribute based on its parented physical attributes.
     //--- Feed ancillary attribute ID.
@@ -220,16 +196,54 @@ public class Character : MonoBehaviour {
         }
         return newValue;
     }
+    
+    //=================================================================================================================================================
+    //=== Utitility
+    //=================================================================================================================================================
+    private IEnumerator MoveTween(Tuple<List<Vector3>, Cell> moveToArgs) {
+        moving = true;
+        //currentCell.isOccupied = false;
+        //Add check for same direction movement to smooth animation and reduce calls
+        for (int i = 0; i < moveToArgs.First.Count; i++) {
+            iTween.MoveTo(gameObject, iTween.Hash(
+                "position", moveToArgs.First[i],
+                "time", moveAnimationSpeed
+            ));
+            yield return new WaitForSeconds(moveDuration);
+        }
+        SetCell(moveToArgs.Second);
+        moving = false;
+        ModifyActionPoints(moveCost);
+        moveCost = 0;
+        playerHandler.AcceptingInput = true;
+    }
     public int[] GetPrimaryAttributeIDs() {
-        return new int[] { 0, 1, 2 }; 
+        return new int[] { 0, 1, 2 };
     }
     public int[] GetDerivedAttributeIDs(int attID) {
         List<int> derivedAttributes = new List<int>();
         //foreach(int primEffID in physicalMap[attID].First.primaryEffects) { derivedAttributes.Add(primEffID); }
-        foreach(int aEffID in physicalMap[attID].First.ancillaryEffects) { derivedAttributes.Add(aEffID); }
+        foreach (int aEffID in physicalMap[attID].First.ancillaryEffects) { derivedAttributes.Add(aEffID); }
         return derivedAttributes.ToArray();
     }
     public void DestroyThis() {
         Destroy(gameObject);
+    }
+    private void ApplyNewMax(int attID) {
+        if (attID == 0) { currentHealth = primaryMap[0].Second; }
+        else if (attID == 1) { currentActionPoints = primaryMap[2].Second; }
+    }
+    public void ResetPrimaryAttributes() {
+        currentHealth = primaryMap[0].Second;
+        currentActionPoints = primaryMap[1].Second;
+    }
+    public int GetPhysicalAttributeValue(int attID) {
+        return physicalMap[attID].Second;
+    }
+    public float GetAncillayrAttributeValue(int attID) {
+        return ancillaryMap[attID].Second;
+    }
+    public string GetPhysicalAttributeName(int attID) {
+        return physicalList[attID];
     }
 }
