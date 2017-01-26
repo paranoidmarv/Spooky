@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PlayerHandler : MonoBehaviour {
     /*
-    Player Handler takes player input, parses is, and tells affected entities (character/enemy/item)
+    Player Handler takes player input, parses it, and tells affected entities (character/enemy/item)
     how to feel about that input. It is also (temporarily?) responsible for displaying context info
     to player.
     */

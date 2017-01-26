@@ -8,13 +8,4 @@ public class CQCWeapon : Weapon {
     public void Strike() {
 
     }
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

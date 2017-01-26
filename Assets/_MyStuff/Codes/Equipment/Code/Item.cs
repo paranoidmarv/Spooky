@@ -8,12 +8,12 @@ public class Item : MonoBehaviour {
     public enum ItemType { CQCWeapon, BallisticWeapon, Projectile, Garment };
     public ItemType itemType;
     // Use this for initialization
-    void Start () {
+    public virtual void Awake () {
 		
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	public virtual void Update () {
 		
 	}
 }

@@ -52,9 +52,6 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -69,9 +66,6 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Purchasing">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -234,9 +228,18 @@
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelPerfectCamera.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelSnap.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Attribute.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Character.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Attribute.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Character.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Inventory.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Profession.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\ProfessionMonoBehaviour.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Specialization.cs" />
     <Compile Include="Assets\_MyStuff\Codes\CharacterCreator.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\BallisticWeapon.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\CQCWeapon.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\Item.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\Weapon.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Map\AStar.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Map\Cell.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Map\Map.cs" />
