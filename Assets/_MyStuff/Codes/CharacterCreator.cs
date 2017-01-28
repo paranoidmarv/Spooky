@@ -56,12 +56,14 @@ public class CharacterCreator : MonoBehaviour {
             int.TryParse(buttonName[1], out id);
             if (buttonName[0] == "-") {
                 if (newCharacter.GetPhysicalAttributeValue(id) - 1 >= 0) {
+                    if (newCharacter.GetPhysicalAttributeValue(id) >= 31) { attributePoints++; }
                     newCharacter.ModifyAttribute(id, Attribute.AttributeType.Physical, -1);
                     attributePoints++;
                 }
             }
             else if(buttonName[0] == "+") {
                 if (newCharacter.GetPhysicalAttributeValue(id) + 1 <= uiManager.sceneManager.ruleSetEngine.physicalAttributes[id].attributeRange.Second && attributePoints - 1 >= 0) {
+                    if (newCharacter.GetPhysicalAttributeValue(id) >= 31) { attributePoints--; }
                     newCharacter.ModifyAttribute(id, Attribute.AttributeType.Physical, 1);
                     attributePoints--;
                 }
@@ -77,6 +79,34 @@ public class CharacterCreator : MonoBehaviour {
             newCharacter.ResetPrimaryAttributes();
             attPointsField.text = "Attribute Points: " + attributePoints.ToString();
         }
+    }
+
+    public bool SelectProfession(int specID, bool isLeftClick) {
+        if (isLeftClick) {
+            if (newCharacter.professionMono.major == null) {
+                newCharacter.professionMono.major = uiManager.sceneManager.ruleSetEngine.specializations[specID];
+                newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.major.parentProfessionID].Second++;
+                return true;
+            }
+            else if (specID == newCharacter.professionMono.major.iD) {
+                newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.major.parentProfessionID].Second--;
+                newCharacter.professionMono.major = null;
+                return false;
+            }
+        }
+        else {
+            if (newCharacter.professionMono.minor == null) {
+                newCharacter.professionMono.minor = uiManager.sceneManager.ruleSetEngine.specializations[specID];
+                newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.minor.parentProfessionID].Second++;
+                return true;
+            }
+            else if (specID == newCharacter.professionMono.minor.iD) {
+                newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.minor.parentProfessionID].Second--;
+                newCharacter.professionMono.minor = null;
+                return false;
+            }
+        }
+        return false;
     }
 
     public void PlaceCharacter() {

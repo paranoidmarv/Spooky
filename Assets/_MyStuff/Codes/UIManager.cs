@@ -7,10 +7,12 @@ public class UIManager : MonoBehaviour {
     public GameObject characterCreationPanel;
     private CharacterCreator cc;
     public SceneManager sceneManager;
+    private GameObject makeNewCharacter;
 	// Use this for initialization
 	void Awake () {
         //characterCreationPanel = GameObject.Find("Character Creation Panel");
         sceneManager = GameObject.Find("Player Manager").GetComponent<SceneManager>();
+        makeNewCharacter = GameObject.Find("MakeNewCharacter");
     }
 	
 	// Update is called once per frame
@@ -27,15 +29,18 @@ public class UIManager : MonoBehaviour {
     }
 
     public void OpenCharacterCreator() {
+        Debug.Log(Time.timeScale);
         if (Time.timeScale == 1) {
             if(cc == null) { cc = cc = characterCreationPanel.GetComponent<CharacterCreator>(); }
             PauseGame();
             characterCreationPanel.SetActive(true);
+            makeNewCharacter.GetComponentInChildren<UILabel>().text = "Cancel";
             //cc.enabled = true;
         }
         else {
             UnPauseGame();
             characterCreationPanel.SetActive(false);
+            makeNewCharacter.GetComponentInChildren<UILabel>().text = "Create New Character";
             //cc.enabled = false;
         }
         

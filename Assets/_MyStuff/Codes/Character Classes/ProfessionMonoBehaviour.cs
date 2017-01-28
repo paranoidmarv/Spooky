@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class ProfessionMonoBehaviour : MonoBehaviour {
     private RuleSetEngine rSE;
+    public List<Tuple<Profession, int>> chosenProfessions;
     public Specialization major;
     public Specialization minor;
-    public Specialization[] basic;
+    public List<Specialization> basic;
 	// Use this for initialization
 	void Awake () {
-        rSE = GetComponent<RuleSetEngine>();
+        chosenProfessions = new List<Tuple<Profession, int>>();
 	}
 	
 	// Update is called once per frame

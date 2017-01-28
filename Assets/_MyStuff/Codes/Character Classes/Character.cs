@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class Character : MonoBehaviour {
     public enum CharacterType { Friendly, Neutral, Enemy }
     public bool isPlayerControlled;
-    private CharacterType type;
+
+    public CharacterType type;
     public CharacterType Type { get { return type; } }
     public void SetCharacterType(CharacterType cT) {
         //%%%%%%%%%%%%%%%%%%%%%Change Tag
@@ -22,6 +23,7 @@ public class Character : MonoBehaviour {
         get { return playerHandler; }
         set { playerHandler = value; }
     }
+    //private AIHandler aH;
     public TextAsset characterTemplate;
     //===============================================================================
     //=== Action Variables
@@ -33,7 +35,8 @@ public class Character : MonoBehaviour {
     private List<Cell> movePaths;
     private bool movePathsDiscovered;
 
-    private Inventory inventory;
+    public Inventory inventory;
+    public ProfessionMonoBehaviour professionMono;
 
     //===============================================================================
     //=== Attribute Maps
@@ -41,7 +44,7 @@ public class Character : MonoBehaviour {
     //--- Primary Attributes                                                                                                                        
     protected Dictionary<int, Tuple<Attribute, int>> primaryMap;
     protected List<string> primaryList;
-    public int currentHealth, currentActionPoints;
+    public int currentHealth, currentActionPoints, currentGrit;
     //--- Physical Attributes
     protected Dictionary<int, Tuple<Attribute, int>> physicalMap;
     protected List<string> physicalList;
@@ -51,13 +54,17 @@ public class Character : MonoBehaviour {
 
     //----------------------------------------------------------------------------------------------------------------------------------------------//
     void Awake() {
+        //if (isPlayerControlled) {
+            playerHandler = GameObject.Find("Player Manager").GetComponent<PlayerHandler>();
+        //}
         primaryMap = new Dictionary<int, Tuple<Attribute, int>>();
         primaryList = new List<string>();
         physicalMap = new Dictionary<int, Tuple<Attribute, int>>();
         physicalList = new List<string>();
         ancillaryMap = new Dictionary<int, Tuple<Attribute, int>>();
         ancillaryList = new List<string>();
-        inventory = GetComponent<Inventory>();
+        inventory = transform.GetComponentInChildren<Inventory>();
+        professionMono = GetComponent<ProfessionMonoBehaviour>();
         movePaths = new List<Cell>();
         movePathsDiscovered = false;
         moving = false;
@@ -137,6 +144,7 @@ public class Character : MonoBehaviour {
         }
         currentHealth = primaryMap[0].Second;
         currentActionPoints = primaryMap[1].Second;
+        currentGrit = primaryMap[2].Second;
         foreach (Attribute att in phAttributes) {
             physicalMap.Add(att.ID, new Tuple<Attribute, int>(att, att.defaultValue));
             physicalList.Add(att.name);
@@ -232,6 +240,7 @@ public class Character : MonoBehaviour {
     private void ApplyNewMax(int attID) {
         if (attID == 0) { currentHealth = primaryMap[0].Second; }
         else if (attID == 1) { currentActionPoints = primaryMap[2].Second; }
+        else { currentGrit = primaryMap[3].Second; }
     }
     public void ResetPrimaryAttributes() {
         currentHealth = primaryMap[0].Second;

@@ -9,7 +9,7 @@ public class PlayerHandler : MonoBehaviour {
     to player.
     */
     public static PlayerHandler instance = null;
-    public enum PlayerState { NothingSelected, InMenu, CharacterSelected, TargetingEnemies, EnemySelected };
+    public enum PlayerState { NothingSelected, InMenu, CharacterSelected, TargetingEnemies, EnemySelected, EnemyTargeted };
     //InWorld = navigating grid overworld
     //InMenu = events are being driven by GUI
     //SomethingSelected = currentSelection is not null
@@ -47,40 +47,53 @@ public class PlayerHandler : MonoBehaviour {
             instance.acceptingInput = false;
             switch (instance.currentState) {
                 case PlayerState.NothingSelected:
+                    Debug.Log("n/a");
                     if (mouseButton == 0) {
+                        Debug.Log("n/a|m0");
                         //if (clickedObject.tag == "Tile") { /*Select character/enemy on tile?*/ }
                         if (clickedObject.tag == "Character") {
+                            Debug.Log("n/a|m0|char");
                             instance.currentState = PlayerState.CharacterSelected;
                             instance.SelectObject(clickedObject);
                             instance.currentSelectedCharacter = instance.currentSelection.GetComponent<Character>();
                             instance.EngageMoveContext();
                             instance.acceptingInput = true;
                         }
-                        else if (clickedObject.tag == "Enemy") {
+                        /*else if (clickedObject.tag == "Enemy") {
+                            Debug.Log("n/a|m0|nme");
                             instance.currentState = PlayerState.EnemySelected;
                             instance.SelectObject(clickedObject);
-                            instance.ShowSelectionInfo();
+                            //instance.ShowSelectionInfo();
+                            instance.acceptingInput = true;
+                        }*/
+                        else {
+                            Debug.Log("n/a|m0|def");
+                            instance.ClearSelection();
                             instance.acceptingInput = true;
                         }
-                        else { instance.ClearSelection(); instance.acceptingInput = true; }
                     }
-                    else if (mouseButton == 1) {
+                    /*else if (mouseButton == 1) {
+                        Debug.Log("n/a|m1");
+                        instance.ClearSelection(); instance.acceptingInput = true;
                         if (clickedObject.tag == "Character" || clickedObject.tag == "Enemy") {
                             instance.SelectObject(clickedObject);
                             instance.currentSelectedCharacter = clickedObject.GetComponent<Character>();
-                            instance.ShowSelectionInfo();
+                            //instance.ShowSelectionInfo();
                             instance.acceptingInput = true;
                         }
                         else { instance.ClearSelection(); instance.acceptingInput = true; }
-                    }
+                    }*/
                     break;
                 case PlayerState.CharacterSelected:
+                    Debug.Log("charSel");
                     if (mouseButton == 0) {
+                        Debug.Log("charSel|m0");
                         if (clickedObject.tag == "Character" && clickedObject.GetInstanceID() == instance.currentSelection.GetInstanceID()) {
-                            Debug.Log("self");
+                            Debug.Log("charSel|m0|char:Self");
                             instance.acceptingInput = true;
                         }
-                        else if (clickedObject.tag == "Character" || clickedObject.tag == "Enemy") {
+                        else if (clickedObject.tag == "Character") {
+                            Debug.Log("charSel|m0|char");
                             instance.DisengageMoveContext();
                             instance.SelectObject(clickedObject);
                             instance.currentSelectedCharacter = clickedObject.GetComponent<Character>();
@@ -88,27 +101,63 @@ public class PlayerHandler : MonoBehaviour {
                             instance.acceptingInput = true;
                         }
                         else {
+                            Debug.Log("charSel|m0|def");
                             instance.DisengageMoveContext();
                             instance.ClearSelection();
                             instance.acceptingInput = true;
                         }
                     }
                     else if (mouseButton == 1) {
+                        Debug.Log("charSel|m1");
                         if (clickedObject.tag == "Tile" && clickedObject.GetComponent<Cell>().IsTraversable && !clickedObject.GetComponent<Cell>().isOccupied
                             && instance.currentSelectedCharacter.moving == false && instance.currentSelectedCharacter.GetMovePaths().Contains(clickedObject.GetComponent<Cell>())) {
+                            Debug.Log("charSel|m1|tile");
                             instance.DisengageMoveContext();
                             instance.MoveTo(instance.currentSelection, clickedObject);
                         }
-                        else if (clickedObject.tag == "Character" || clickedObject.tag == "Enemy") {
-                            instance.acceptingInput = false;
+                        else if (clickedObject.tag == "Enemy") {
+                            Debug.Log("charSel|m1|nme");
                             instance.currentTarget = clickedObject.GetComponent<Character>();
+                            instance.acceptingInput = false;
+                            instance.DisengageMoveContext();
                             instance.EngageTargetContext();
+                        }
+                        else {
+                            Debug.Log("charSel|m1|def");
+                            instance.DisengageMoveContext();
+                            instance.ClearSelection();
+                            instance.acceptingInput = true;
                         }
                         //if(clickedObject.tag == "Enemy") {}
                         //if(clickedObject.tag == "Character") {}
                     }
                     break;
                 case PlayerState.TargetingEnemies:
+                    Debug.Log("tarNME");
+                    if(mouseButton == 0) {
+                        Debug.Log("tarNME|m0");
+                        if (clickedObject.tag == "Enemy" && instance.targets.Contains(clickedObject.GetComponent<Character>())) {
+                            Debug.Log("tarNME|m0|NME");
+                            instance.DisengageTargetEnemyContext(true);
+                            instance.currentTarget = clickedObject.GetComponent<Character>();
+                            instance.currentTarget.transform.GetComponentInChildren<SpriteRenderer>().color = instance.highlight;
+                            instance.acceptingInput = true;
+                            //show attack vs defense info
+                        }
+                        else {
+                            Debug.Log("tarNME|m0|def");
+                            instance.DisengageTargetEnemyContext(false);
+                            instance.ClearSelection();
+                            instance.acceptingInput = true;
+                        }
+                        //if(clickedObject.tag == "Enemy") { }//attack coroutine
+                    }
+                    else if(mouseButton == 1) {
+                        Debug.Log("tarNME|m1|def");
+                        instance.DisengageTargetEnemyContext(false);
+                        instance.ClearSelection();
+                        instance.acceptingInput = true;
+                    }
                     break;
             }
 
@@ -209,11 +258,15 @@ public class PlayerHandler : MonoBehaviour {
         }
     }
     public void EngageTargetContext() {
-        if(currentSelectedCharacter != null && currentTarget != null) {
+        Debug.Log("EngageTargetContext");
+        if (currentSelectedCharacter != null && currentTarget != null) {
             switch (currentTarget.Type) {
+                case Character.CharacterType.Friendly:
+                    acceptingInput = true; ;
+                    break;
                 case Character.CharacterType.Enemy:
                     instance.currentState = PlayerState.TargetingEnemies;
-                    EngageTargetEnemyContext();
+                    StartCoroutine(currentSelectedCharacter.inventory.GetWeaponRange());
                     break;
             }
         }
@@ -221,8 +274,39 @@ public class PlayerHandler : MonoBehaviour {
     public void DisengageTargetContext() {
 
     }
-    public void EngageTargetEnemyContext() {
+    private Color highlight = new Color32(255, 130, 130, 255);
+    private Color noHighlight = new Color32(255, 255, 255, 255);
+    private List<Character> targets;
+    public void EngageTargetEnemyContext(List<Character> targs) {
+        if (targets == null || targets != targs) {
+            if (currentSelectedCharacter.inventory.currentWeapon.canHitDiagonal) { targets = targs; }
+            else {
+                targets = new List<Character>();
+                foreach (Character targ in targs) {
+                    if(map.GetAdjList(currentSelectedCharacter.CurrentCell.Position, false).Contains(targ.CurrentCell.Position)){
+                        targets.Add(targ);
+                    }
+                }
+            }
+        }
 
+        //do something else, highlight for now
+        foreach (Character targ in targets) {
+            //if can hit diagonal target or target not diagonal
+            if (currentSelectedCharacter.inventory.currentWeapon.canHitDiagonal || map.GetAdjList(currentSelectedCharacter.CurrentCell.Position, false).Contains(targ.CurrentCell.Position)){
+                targ.gameObject.GetComponentInChildren<SpriteRenderer>().color = highlight;
+                map.HighLightCell(targ.CurrentCell.Position);
+            }
+        }
+        acceptingInput = true;
+    }
+    public void DisengageTargetEnemyContext(bool keepTargets) {
+        foreach(Character targ in targets) {
+            targ.gameObject.GetComponentInChildren<SpriteRenderer>().color = noHighlight;
+            map.ClearHighLight(targ.CurrentCell.Position);
+        }
+        if (!keepTargets) { targets = null; }
+        acceptingInput = true;
     }
     public void EngagePowerContext() {
 

@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour {
+    public Character owner;
+
     public int maxEquippableWeapons;
     public List<Weapon> equippedWeapons;
     public Weapon defaultWeapon;
-    public float meleeWeaponRange;
+    public Weapon currentWeapon;
 	// Use this for initialization
 	void Awake () {
+        owner = transform.parent.gameObject.GetComponent<Character>();
         equippedWeapons = new List<Weapon>();
-        equippedWeapons.Add(defaultWeapon);
+        defaultWeapon = GameObject.Find("CQC_HandToHand").GetComponent<Weapon>();
+        EquipWeapon(defaultWeapon);
+        currentWeapon = equippedWeapons[0];
 	}
 
-	
-	// Update is called once per frame
 	void Update () {
 		
 	}
@@ -24,18 +27,13 @@ public class Inventory : MonoBehaviour {
             equippedWeapons.Add(newWeapon);
         }
     }
-    public float GetWeaponRange(int weaponIndex) {
+    public IEnumerator GetWeaponRange() {
         //Instead of returning range
         //have a collider set on weapon object
         //based on range, and is enabled when
-        //targetting with weapon 
-        Weapon wep = equippedWeapons[weaponIndex];
-        if(wep.itemType == Item.ItemType.CQCWeapon) {
-            return meleeWeaponRange;
-        }
-        else if(wep.itemType == Item.ItemType.BallisticWeapon) {
-            return ((BallisticWeapon)wep).range;
-        }
-        else { return -1f; }
+        //targetting with weapon
+        currentWeapon.RangeTargets();
+        yield return new WaitForFixedUpdate();
+        owner.PlayerHandler.EngageTargetEnemyContext(currentWeapon.inRangeTargets);
     }
 }
