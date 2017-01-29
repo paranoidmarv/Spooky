@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class SceneManager : MonoBehaviour {
     public List<Character> characters;
     public Map sceneMap;
-    private PlayerHandler playerHandler;
+    public PlayerHandler playerHandler;
     public RuleSetEngine ruleSetEngine;
     private UIManager uiManager;
     public bool sceneReady;
@@ -29,7 +29,7 @@ public class SceneManager : MonoBehaviour {
     public void InitializeNewCharacter(GameObject nChar) {
         Character newCharacter = nChar.GetComponent<Character>();
         newCharacter.PlayerHandler = playerHandler;
-        newCharacter.InitializeCharacterAttributes(ruleSetEngine.primaryAttributes, ruleSetEngine.physicalAttributes, ruleSetEngine.ancillaryAttributes);
+        newCharacter.InitializeCharacterAttributes(ruleSetEngine.primaryAttributes, ruleSetEngine.physicalAttributes, ruleSetEngine.ancillaryAttributes, ruleSetEngine.professions);
     }
 
     public void AddNewCharacter(GameObject nChar) {
@@ -45,7 +45,7 @@ public class SceneManager : MonoBehaviour {
                     characters.Add(characterGameObjects[i].GetComponent<Character>());
                     characters[i].SetCell(sceneMap.GetCell(new Tuple<int, int>(characters[i].cellX, characters[i].cellY)));
                     characters[i].PlayerHandler = playerHandler;
-                    characters[i].InitializeCharacterAttributes(ruleSetEngine.primaryAttributes, ruleSetEngine.physicalAttributes, ruleSetEngine.ancillaryAttributes);
+                    characters[i].InitializeCharacterAttributes(ruleSetEngine.primaryAttributes, ruleSetEngine.physicalAttributes, ruleSetEngine.ancillaryAttributes, ruleSetEngine.professions);
                 }
                 gotCharacters = true;
             }

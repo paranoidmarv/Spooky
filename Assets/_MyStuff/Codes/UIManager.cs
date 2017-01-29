@@ -29,18 +29,19 @@ public class UIManager : MonoBehaviour {
     }
 
     public void OpenCharacterCreator() {
-        Debug.Log(Time.timeScale);
         if (Time.timeScale == 1) {
             if(cc == null) { cc = cc = characterCreationPanel.GetComponent<CharacterCreator>(); }
             PauseGame();
             characterCreationPanel.SetActive(true);
             makeNewCharacter.GetComponentInChildren<UILabel>().text = "Cancel";
+            sceneManager.playerHandler.AcceptingInput = false;
             //cc.enabled = true;
         }
         else {
             UnPauseGame();
             characterCreationPanel.SetActive(false);
             makeNewCharacter.GetComponentInChildren<UILabel>().text = "Create New Character";
+            sceneManager.playerHandler.AcceptingInput = false;
             //cc.enabled = false;
         }
         

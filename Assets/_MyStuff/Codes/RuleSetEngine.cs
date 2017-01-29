@@ -25,6 +25,8 @@ public class RuleSetEngine : MonoBehaviour {
         primaryAttributes = new List<Attribute>();
         physicalAttributes = new List<Attribute>();
         ancillaryAttributes = new List<Attribute>();
+        professions = new List<Profession>();
+        specializations = new List<Specialization>();
         isRuleSetLoaded = false;
         LoadRuleSet();
         //=== Turn Variables
@@ -56,6 +58,7 @@ public class RuleSetEngine : MonoBehaviour {
                 else if (type == 1) { InitializeRuleSetAttributes(Attribute.AttributeType.Physical, lines); }
                 else if (type == 2) { InitializeRuleSetAttributes(Attribute.AttributeType.Ancillary, lines); }
                 else if (type == 3) { InitializeRuleSetProfessions(lines); }
+                else if (type == 4) { InitializeRuleSetSpecializations(lines); }
             }
         }
         isRuleSetLoaded = true;
@@ -76,11 +79,19 @@ public class RuleSetEngine : MonoBehaviour {
     }
 
     private void InitializeRuleSetProfessions(string[] lines) {
-        List<Profession> temp = new List<Profession>();
         for (int i = 1; i < lines.Length; i++) {
             string[] entries = lines[i].Split(';');
             int id; int.TryParse(entries[3], out id);
-            temp.Add(new Profession(entries[0], entries[1], entries[2].Split(':'), id));
+            professions.Add(new Profession(entries[0], entries[1], entries[2].Split(':'), id));
+        }
+    }
+
+    private void InitializeRuleSetSpecializations(string[] lines) {
+        for(int i = 1; i < lines.Length; i++) {
+            string[] entries = lines[i].Split(';');
+            int parProfID, assAttID, iD;
+            int.TryParse(entries[2], out parProfID); int.TryParse(entries[3], out assAttID); int.TryParse(entries[4], out iD);
+            specializations.Add(new Specialization(entries[0], entries[1], parProfID, iD, new Skill(ancillaryAttributes[assAttID].name, ancillaryAttributes[assAttID].description, i - 1, iD, assAttID)));
         }
     }
 }

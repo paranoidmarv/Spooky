@@ -137,7 +137,7 @@ public class Character : MonoBehaviour {
     //===============================================================================================================================================
     //=== Attribute Methods
     //===============================================================================================================================================
-    public void InitializeCharacterAttributes(List<Attribute> pAttributes, List<Attribute> phAttributes, List<Attribute> aAttributes) {
+    public void InitializeCharacterAttributes(List<Attribute> pAttributes, List<Attribute> phAttributes, List<Attribute> aAttributes, List<Profession> professions) {
         foreach(Attribute att in pAttributes) {
             primaryMap.Add(att.ID, new Tuple<Attribute, int>(att, att.defaultValue));
             primaryList.Add(att.name);
@@ -153,6 +153,9 @@ public class Character : MonoBehaviour {
             ancillaryMap.Add(att.ID, new Tuple<Attribute, int>(att, att.defaultValue));
             ancillaryMap[att.ID].Second = ComputeAncillaryValue(att.ID);
             ancillaryList.Add(att.name);
+        }
+        foreach (Profession prof in professions) {
+            professionMono.chosenProfessions.Add(new Tuple<Profession, int>(prof, 0));
         }
         //PrintAttributes();
     }

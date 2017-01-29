@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Profession : MonoBehaviour {
+public class Profession {
     public string name;
     public string description;
     public int iD;
@@ -17,14 +17,4 @@ public class Profession : MonoBehaviour {
             int.TryParse(childSpecIDs[i], out childSpecializationIDs[i]);
         }
     }
-	// Use this for initialization
-    
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

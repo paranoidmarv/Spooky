@@ -19,10 +19,16 @@ public class NGUIButtonForward : MonoBehaviour {
                 int specID;
                 int.TryParse(gameObject.name, out specID);
                 if (!cC.SelectProfession(specID, true)) {
-                    gameObject.GetComponent<UIButton>().normalSprite2D = gameObject.GetComponent<UIButton>().pressedSprite2D;
+                    UIButton temp = gameObject.GetComponent<UIButton>();
+                    temp.normalSprite = "button_CQC";
+                    temp.hoverSprite = "button_CQCPressed";
+                    temp.pressedSprite = "button_CQCPressed";
                 }
                 else {
-                    gameObject.GetComponent<UIButton>().normalSprite2D = gameObject.GetComponent<UIButton>().disabledSprite2D;
+                    UIButton temp = gameObject.GetComponent<UIButton>();
+                    temp.normalSprite = "button_CQCPressed";
+                    temp.hoverSprite = "button_CQC";
+                    temp.pressedSprite = "button_CQC";
                 }
                 break;
         }
@@ -34,10 +40,16 @@ public class NGUIButtonForward : MonoBehaviour {
                 int specID;
                 int.TryParse(gameObject.name, out specID);
                 if (!cC.SelectProfession(specID, false)) {
-                    gameObject.GetComponent<UIButton>().normalSprite2D = gameObject.GetComponent<UIButton>().pressedSprite2D;
+                    UIButton temp = gameObject.GetComponent<UIButton>();
+                    temp.normalSprite = "button_CQC";
+                    temp.hoverSprite = "button_CQCPressed";
+                    temp.pressedSprite = "button_CQCPressed";
                 }
                 else {
-                    gameObject.GetComponent<UIButton>().normalSprite2D = gameObject.GetComponent<UIButton>().disabledSprite2D;
+                    UIButton temp = gameObject.GetComponent<UIButton>();
+                    temp.normalSprite = "button_CQCPressed";
+                    temp.hoverSprite = "button_CQC";
+                    temp.pressedSprite = "button_CQC";
                 }
                 break;
         }
