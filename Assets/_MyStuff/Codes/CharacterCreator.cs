@@ -55,17 +55,29 @@ public class CharacterCreator : MonoBehaviour {
             int id;
             int.TryParse(buttonName[1], out id);
             if (buttonName[0] == "-") {
-                if (newCharacter.GetPhysicalAttributeValue(id) - 1 >= 0) {
-                    if (newCharacter.GetPhysicalAttributeValue(id) >= 31) { attributePoints++; }
+                if (newCharacter.GetPhysicalAttributeValue(id) < 31) {
+                    if (newCharacter.GetPhysicalAttributeValue(id) - 1 >= 0) {
+                        newCharacter.ModifyAttribute(id, Attribute.AttributeType.Physical, -1);
+                        attributePoints++;
+                    }
+                }
+                else {
                     newCharacter.ModifyAttribute(id, Attribute.AttributeType.Physical, -1);
-                    attributePoints++;
+                    attributePoints += 2;
                 }
             }
             else if(buttonName[0] == "+") {
-                if (newCharacter.GetPhysicalAttributeValue(id) + 1 <= uiManager.sceneManager.ruleSetEngine.physicalAttributes[id].attributeRange.Second && attributePoints - 1 >= 0) {
-                    if (newCharacter.GetPhysicalAttributeValue(id) >= 31) { attributePoints--; }
-                    newCharacter.ModifyAttribute(id, Attribute.AttributeType.Physical, 1);
-                    attributePoints--;
+                if (newCharacter.GetPhysicalAttributeValue(id) < 30) {
+                    if (newCharacter.GetPhysicalAttributeValue(id) + 1 <= uiManager.sceneManager.ruleSetEngine.physicalAttributes[id].attributeRange.Second && attributePoints - 1 >= 0) {
+                        newCharacter.ModifyAttribute(id, Attribute.AttributeType.Physical, 1);
+                        attributePoints--;
+                    }
+                }
+                else {
+                    if (newCharacter.GetPhysicalAttributeValue(id) + 1 <= uiManager.sceneManager.ruleSetEngine.physicalAttributes[id].attributeRange.Second && attributePoints - 2 >= 0) {
+                        newCharacter.ModifyAttribute(id, Attribute.AttributeType.Physical, 1);
+                        attributePoints -= 2;
+                    }
                 }
             }
             string[] attName = phAttributeFields[id].text.Split('\n');

@@ -21,7 +21,7 @@ public class RuleSetEngine : MonoBehaviour {
     //=== References ==============================================
     private PlayerHandler pH;
     private SceneManager sC;
-    void Awake () {
+    void Awake() {
         primaryAttributes = new List<Attribute>();
         physicalAttributes = new List<Attribute>();
         ancillaryAttributes = new List<Attribute>();
@@ -36,7 +36,7 @@ public class RuleSetEngine : MonoBehaviour {
     }
 
     public bool EndTurn() {
-        foreach(Character character in sC.characters){
+        foreach (Character character in sC.characters) {
             character.UpdateCharacter();
         }
         elapsedTime += timePerTurn;
@@ -55,6 +55,7 @@ public class RuleSetEngine : MonoBehaviour {
                 if (type == 0) { InitializeRuleSetAttributes(Attribute.AttributeType.Primary, lines); }
                 else if (type == 1) { InitializeRuleSetAttributes(Attribute.AttributeType.Physical, lines); }
                 else if (type == 2) { InitializeRuleSetAttributes(Attribute.AttributeType.Ancillary, lines); }
+                else if (type == 3) { InitializeRuleSetProfessions(lines); }
             }
         }
         isRuleSetLoaded = true;
@@ -65,12 +66,21 @@ public class RuleSetEngine : MonoBehaviour {
         for (int i = 1; i < lines.Length; i++) {
             string[] entries = lines[i].Split(';');
             temp.Add(new Attribute(attributeType, entries[0].Split('\n')[1], entries[1], entries));
-            if(entries[entries.Length - 1] == "^") {
+            if (entries[entries.Length - 1] == "^") {
                 temp[temp.Count - 1].active = false;
             }
         }
-        if(attributeType == Attribute.AttributeType.Primary) { primaryAttributes = temp; }
-        else if(attributeType == Attribute.AttributeType.Physical) { physicalAttributes = temp; }
-        else if(attributeType == Attribute.AttributeType.Ancillary) { ancillaryAttributes = temp; }
+        if (attributeType == Attribute.AttributeType.Primary) { primaryAttributes = temp; }
+        else if (attributeType == Attribute.AttributeType.Physical) { physicalAttributes = temp; }
+        else if (attributeType == Attribute.AttributeType.Ancillary) { ancillaryAttributes = temp; }
+    }
+
+    private void InitializeRuleSetProfessions(string[] lines) {
+        List<Profession> temp = new List<Profession>();
+        for (int i = 1; i < lines.Length; i++) {
+            string[] entries = lines[i].Split(';');
+            int id; int.TryParse(entries[3], out id);
+            temp.Add(new Profession(entries[0], entries[1], entries[2].Split(':'), id));
+        }
     }
 }
