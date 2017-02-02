@@ -16,17 +16,21 @@ public class CharacterCreator : MonoBehaviour {
     public Character newCharacter;
     private UIManager uiManager;
     private bool creatorInitialized;
+    private UILabel[] pAttributeFields;
     private UILabel[] phAttributeFields;
     private UILabel[] aAttributeFields;
     private List<string> aAttNames;
+    private UILabel majorSpecialization;
+    private UILabel minorSpecialization;
 
     public int allottedPoints;
     private int attributePoints;
 
     void Awake() {
-        Debug.Log("awake");
         uiManager = GameObject.Find("UI Root").GetComponent<UIManager>();
         aAttNames = new List<string>();
+        majorSpecialization = GameObject.Find("Major").GetComponent<UILabel>();
+        minorSpecialization = GameObject.Find("Minor").GetComponent<UILabel>();
         creatorInitialized = InitializeCreatorPanel(); 
     }
 
@@ -34,7 +38,7 @@ public class CharacterCreator : MonoBehaviour {
 	void OnEnable () {
         if (creatorInitialized) {
             attributePoints = allottedPoints;
-            newCharacter = ((GameObject)Instantiate(characterPrefab, Vector2.zero, Quaternion.identity)).GetComponent<Character>();
+            newCharacter = (Instantiate(characterPrefab, Vector2.zero, Quaternion.identity)).GetComponent<Character>();
             uiManager.sceneManager.InitializeNewCharacter(newCharacter.gameObject);
             InitializePanelValues();
             attPointsField.text = "Attribute Points: " + attributePoints.ToString();
@@ -48,8 +52,7 @@ public class CharacterCreator : MonoBehaviour {
         }
     }
 	
-    public void ModifyPhysicalAttribute(string bN) {
-        
+    public void ModifyPhysicalAttribute(string bN) {  
         string[] buttonName = bN.Split(' ');
         if (buttonName.Length == 2) {
             int id;
@@ -90,48 +93,109 @@ public class CharacterCreator : MonoBehaviour {
             }
             newCharacter.ResetPrimaryAttributes();
             attPointsField.text = "Attribute Points: " + attributePoints.ToString();
+            int[] primaryAttIDs = newCharacter.GetPrimaryAttributeIDs(id);
+            foreach (int primEffID in primaryAttIDs) {
+                string[] temp = pAttributeFields[primEffID].text.Split(':');
+                pAttributeFields[primEffID].text = temp[0] + ": " + newCharacter.GetPrimaryAttributeValue(primEffID);
+            }
         }
     }
-
     public bool SelectProfession(int specID, bool isLeftClick) {
         if (isLeftClick) {
             if (newCharacter.professionMono.major == null) {
+                if (newCharacter.professionMono.minor != null && specID == newCharacter.professionMono.minor.iD) {
+                    newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.minor.parentProfessionID].Second--;
+                    newCharacter.professionMono.minor = null;
+                    minorSpecialization.text = "";
+                }
                 newCharacter.professionMono.major = uiManager.sceneManager.ruleSetEngine.specializations[specID];
                 newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.major.parentProfessionID].Second++;
+                majorSpecialization.text = newCharacter.professionMono.major.name;
                 return true;
             }
             else if (specID == newCharacter.professionMono.major.iD) {
                 newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.major.parentProfessionID].Second--;
                 newCharacter.professionMono.major = null;
+                majorSpecialization.text = "";
                 return false;
+            }
+            else if (newCharacter.professionMono.minor != null && specID == newCharacter.professionMono.minor.iD) {
+                Specialization temp = newCharacter.professionMono.major;
+                newCharacter.professionMono.major = newCharacter.professionMono.minor;
+                newCharacter.professionMono.minor = temp;
+                majorSpecialization.text = newCharacter.professionMono.major.name;
+                minorSpecialization.text = newCharacter.professionMono.minor.name;
+                return true;
+            }
+            else {
+                newCharacter.professionMono.major = uiManager.sceneManager.ruleSetEngine.specializations[specID];
+                newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.major.parentProfessionID].Second++;
+                majorSpecialization.text = newCharacter.professionMono.major.name;
+                return true;
             }
         }
         else {
             if (newCharacter.professionMono.minor == null) {
+                if(newCharacter.professionMono.major != null && specID == newCharacter.professionMono.major.iD) {
+                    newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.major.parentProfessionID].Second--;
+                    newCharacter.professionMono.major = null;
+                    majorSpecialization.text = "";
+                }
                 newCharacter.professionMono.minor = uiManager.sceneManager.ruleSetEngine.specializations[specID];
                 newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.minor.parentProfessionID].Second++;
+                minorSpecialization.text = newCharacter.professionMono.minor.name;
                 return true;
             }
             else if (specID == newCharacter.professionMono.minor.iD) {
                 newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.minor.parentProfessionID].Second--;
                 newCharacter.professionMono.minor = null;
+                minorSpecialization.text = "";
                 return false;
             }
+            else if (newCharacter.professionMono.major != null && specID == newCharacter.professionMono.major.iD) {
+                Specialization temp = newCharacter.professionMono.major;
+                newCharacter.professionMono.major = newCharacter.professionMono.minor;
+                newCharacter.professionMono.minor = temp;
+                majorSpecialization.text = newCharacter.professionMono.major.name;
+                minorSpecialization.text = newCharacter.professionMono.minor.name;
+                return true;
+            }
+            else {
+                newCharacter.professionMono.minor = uiManager.sceneManager.ruleSetEngine.specializations[specID];
+                newCharacter.professionMono.chosenProfessions[newCharacter.professionMono.minor.parentProfessionID].Second++;
+                minorSpecialization.text = newCharacter.professionMono.minor.name;
+                return true;
+            }
         }
-        return false;
     }
 
     public void PlaceCharacter() {
         uiManager.sceneManager.sceneMap.placingNewCharacter = true;
-        
         uiManager.sceneManager.AddNewCharacter(newCharacter.gameObject);
         newCharacter.gameObject.AddComponent<PlaceNewCharacter>();
         newCharacter = null;
         uiManager.OpenCharacterCreator();
     }
+    public void ToggleEnemy() {
+        if(newCharacter.tag == "Character") {
+            newCharacter.tag = "Enemy";
+            newCharacter.type = Character.CharacterType.Enemy;
+        }
+        else if (newCharacter.tag == "Enemy") {
+            newCharacter.tag = "Character";
+            newCharacter.type = Character.CharacterType.Friendly;
+        }
+    }
     //=== Initialization ===================================================================================================================================
     private void InitializePanelValues() {
-        List<Attribute> attributes = uiManager.sceneManager.ruleSetEngine.physicalAttributes;
+        List<Attribute> attributes = uiManager.sceneManager.ruleSetEngine.primaryAttributes;
+        pAttributeFields[0].text = "HP: " + attributes[0].defaultValue;
+        pAttributeFields[1].text = "AP: " + attributes[1].defaultValue;
+        pAttributeFields[2].text = "Grit: " + attributes[2].defaultValue;
+        /*foreach (Attribute att in attributes) {
+            pAttributeFields[att.ID].text = att.name + ": " + att.defaultValue.ToString();
+        }*/
+        attributes = uiManager.sceneManager.ruleSetEngine.physicalAttributes;
         foreach(Attribute att in attributes) {
             phAttributeFields[att.ID].text = att.name + "\n" + att.defaultValue.ToString();
         }
@@ -139,51 +203,27 @@ public class CharacterCreator : MonoBehaviour {
         foreach(Attribute att in attributes) {
             aAttributeFields[att.ID].text = att.name + ": " + att.defaultValue.ToString();
         }
+        majorSpecialization.text = "";
+        minorSpecialization.text = "";
     }
 
     public bool InitializeCreatorPanel() {
         if (uiManager.sceneManager.sceneReady) {
-            List<Attribute> attributes = uiManager.sceneManager.ruleSetEngine.physicalAttributes;
+            List<Attribute> attributes = uiManager.sceneManager.ruleSetEngine.primaryAttributes;
+            pAttributeFields = new UILabel[attributes.Count];
+            for(int i = 0; i < attributes.Count; i++) {
+                pAttributeFields[i] = GameObject.Find(attributes[i].name).GetComponent<UILabel>();
+            }
+            attributes = uiManager.sceneManager.ruleSetEngine.physicalAttributes;
             phAttributeFields = new UILabel[attributes.Count];
             for(int i = 0; i < attributes.Count; i++) {
                 phAttributeFields[i] = GameObject.Find(attributes[i].name).GetComponent<UILabel>();
-                //=== UGUI CODE =================================================================================
-                //=== Plus Button ===
-                /*GameObject newMinusButton = Instantiate(ccButton);
-                newMinusButton.transform.SetParent(pAS.transform);
-                newMinusButton.transform.localScale = new Vector3(1, 1, 1);
-                newMinusButton.name = "- " + attributes[i].ID;
-                newMinusButton.GetComponentInChildren<Text>().text = "-";
-                newMinusButton.GetComponent<Button>().onClick.AddListener(ModifyPhysicalAttribute);
-                //=== Field ===
-                GameObject newField = Instantiate(ccField);
-                newField.transform.SetParent(pAS.transform);
-                newField.transform.localScale = new Vector3(1, 1, 1);
-                phAttributeFields[i] = newField.GetComponent<Text>();
-                phAttributeFields[i].alignment = TextAnchor.UpperCenter;
-                phAttributeFields[i].text = GetNameAfterReturn(attributes[i].name);
-                //=== Minus Button ===
-                GameObject newPlusButton = Instantiate(ccButton);
-                newPlusButton.transform.SetParent(pAS.transform);
-                newPlusButton.transform.localScale = new Vector3(1, 1, 1);
-                newPlusButton.name = "+ " + attributes[i].ID;
-                newPlusButton.GetComponentInChildren<Text>().text = "+";
-                newPlusButton.GetComponent<Button>().onClick.AddListener(ModifyPhysicalAttribute);*/
-                //=== UGUI CODE =================================================================================
             }
             attributes = uiManager.sceneManager.ruleSetEngine.ancillaryAttributes;
             aAttributeFields = new UILabel[attributes.Count];
             for(int i = 0; i < attributes.Count; i++) {
                 aAttributeFields[i] = GameObject.Find(attributes[i].name).GetComponent<UILabel>();
                 aAttNames.Add(attributes[i].name);
-                //=== UGUI CODE =================================================================================
-                /*GameObject newField = Instantiate(ccField);
-                newField.transform.SetParent(dAP.transform);
-                newField.transform.localScale = new Vector3(1, 1, 1);
-                aAttNames.Add(GetNameAfterReturn(attributes[i].name));
-                aAttributeFields[i] = newField.GetComponent<Text>();
-                aAttributeFields[i].text = aAttNames[i] + ": ";*/
-                //=== UGUI CODE =================================================================================
             }
             return true;
         }

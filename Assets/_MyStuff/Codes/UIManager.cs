@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour {
     private CharacterCreator cc;
     public SceneManager sceneManager;
     private GameObject makeNewCharacter;
+    public UICamera uiCam;
 	// Use this for initialization
 	void Awake () {
         //characterCreationPanel = GameObject.Find("Character Creation Panel");

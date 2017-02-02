@@ -36,6 +36,7 @@ public class RuleSetEngine : MonoBehaviour {
         pH = GetComponent<PlayerHandler>();
         sC = GetComponent<SceneManager>();
     }
+    //=== Interaction
 
     public bool EndTurn() {
         foreach (Character character in sC.characters) {
@@ -45,7 +46,7 @@ public class RuleSetEngine : MonoBehaviour {
         turnsTaken++;
         return true;
     }
-
+    //=== Initialization Methods
     private void LoadRuleSet() {
         string ruleSetString = ruleSet.text;
         string[] sections = ruleSetString.Split('<');
@@ -82,7 +83,7 @@ public class RuleSetEngine : MonoBehaviour {
         for (int i = 1; i < lines.Length; i++) {
             string[] entries = lines[i].Split(';');
             int id; int.TryParse(entries[3], out id);
-            professions.Add(new Profession(entries[0], entries[1], entries[2].Split(':'), id));
+            professions.Add(new Profession(entries[0].Split('\n')[1], entries[1], entries[2].Split(':'), id));
         }
     }
 
@@ -91,7 +92,7 @@ public class RuleSetEngine : MonoBehaviour {
             string[] entries = lines[i].Split(';');
             int parProfID, assAttID, iD;
             int.TryParse(entries[2], out parProfID); int.TryParse(entries[3], out assAttID); int.TryParse(entries[4], out iD);
-            specializations.Add(new Specialization(entries[0], entries[1], parProfID, iD, new Skill(ancillaryAttributes[assAttID].name, ancillaryAttributes[assAttID].description, i - 1, iD, assAttID)));
+            specializations.Add(new Specialization(entries[0].Split('\n')[1], entries[1], parProfID, iD, new Skill(ancillaryAttributes[assAttID].name, ancillaryAttributes[assAttID].description, i - 1, iD, assAttID)));
         }
     }
 }

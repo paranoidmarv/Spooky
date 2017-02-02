@@ -228,8 +228,10 @@ public class Character : MonoBehaviour {
         moveCost = 0;
         playerHandler.AcceptingInput = true;
     }
-    public int[] GetPrimaryAttributeIDs() {
-        return new int[] { 0, 1, 2 };
+    public int[] GetPrimaryAttributeIDs(int attID) {
+        List<int> primAtts = new List<int>();
+        foreach(int primEffID in physicalMap[attID].First.primaryEffects) { primAtts.Add(primEffID); }
+        return primAtts.ToArray();
     }
     public int[] GetDerivedAttributeIDs(int attID) {
         List<int> derivedAttributes = new List<int>();
@@ -248,6 +250,9 @@ public class Character : MonoBehaviour {
     public void ResetPrimaryAttributes() {
         currentHealth = primaryMap[0].Second;
         currentActionPoints = primaryMap[1].Second;
+    }
+    public int GetPrimaryAttributeValue(int attID) {
+        return primaryMap[attID].Second;
     }
     public int GetPhysicalAttributeValue(int attID) {
         return physicalMap[attID].Second;

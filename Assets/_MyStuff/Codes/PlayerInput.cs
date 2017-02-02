@@ -20,6 +20,11 @@ public class PlayerInput : MonoBehaviour {
             mouseButton = 1;
             //PlayerHandler.instance.MouseClickEvent(1, GetClickedGameObject());
         }
+        if (mouseButton != -1) {
+            GameObject clickedGO = GetClickedGameObject();
+            Debug.Log(clickedGO.name);
+            if (clickedGO != null) { PlayerHandler.Event(mouseButton, clickedGO); }
+        }
         //Button Event
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) {
             if (Input.GetKey(KeyCode.W)) { moveVector += new Vector2(0, 1f); }
@@ -28,10 +33,6 @@ public class PlayerInput : MonoBehaviour {
             if (Input.GetKey(KeyCode.D)) { moveVector += new Vector2(1f, 0); }
         }
         else if (Input.GetKeyUp(KeyCode.Return)) { PlayerHandler.EndTurn(); }
-        if(mouseButton != -1) {
-            GameObject clickedGO = GetClickedGameObject();
-            if (clickedGO != null) { PlayerHandler.Event(mouseButton, clickedGO); }
-        }
         else if(moveVector != Vector2.zero) {
             PlayerHandler.Event(moveVector);
         }
