@@ -38,5 +38,4 @@ public class Weapon : Item {
     private void OnTriggerEnter2D(Collider2D collision) {
         inRangeTargets.Add(collision.gameObject.GetComponent<Character>());
     }
-
 }

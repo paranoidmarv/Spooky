@@ -35,5 +35,6 @@ public class Inventory : MonoBehaviour {
         currentWeapon.RangeTargets();
         yield return new WaitForFixedUpdate();
         owner.PlayerHandler.EngageTargetEnemyContext(currentWeapon.inRangeTargets);
+        currentWeapon.ClearTargets();
     }
 }

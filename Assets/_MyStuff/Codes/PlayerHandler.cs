@@ -103,7 +103,6 @@ public class PlayerHandler : MonoBehaviour {
                         }
                     }
                     else if (mouseButton == 1) {
-                        Debug.Log(clickedObject.name);
                         if (clickedObject.tag == "Tile" && clickedObject.GetComponent<Cell>().IsTraversable && !clickedObject.GetComponent<Cell>().isOccupied
                             && instance.currentSelectedCharacter.moving == false && instance.currentSelectedCharacter.GetMovePaths().Contains(clickedObject.GetComponent<Cell>())) {
                             instance.DisengageMoveContext();
@@ -264,7 +263,6 @@ public class PlayerHandler : MonoBehaviour {
     private Color noHighlight = new Color32(255, 255, 255, 255);
     private List<Character> targets;
     public void EngageTargetEnemyContext(List<Character> targs) {
-        Debug.Log("EngageTargetContext");
         if (targets == null || targets != targs) {
             if (currentSelectedCharacter.inventory.currentWeapon.canHitDiagonal) { targets = targs; }
             else {
@@ -279,6 +277,7 @@ public class PlayerHandler : MonoBehaviour {
 
         //do something else, highlight for now
         foreach (Character targ in targets) {
+            Debug.Log(targ.gameObject.name);
             //if can hit diagonal target or target not diagonal
             if (currentSelectedCharacter.inventory.currentWeapon.canHitDiagonal || map.GetAdjList(currentSelectedCharacter.CurrentCell.Position, false).Contains(targ.CurrentCell.Position)){
                 targ.gameObject.GetComponentInChildren<SpriteRenderer>().color = highlight;
