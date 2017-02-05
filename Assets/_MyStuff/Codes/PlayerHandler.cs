@@ -23,6 +23,7 @@ public class PlayerHandler : MonoBehaviour {
         set { acceptingInput = value; }
     }
     private Map map;
+    private RuleSetEngine ruleSetEngine;
 
     private GameObject mainCamera;
     private int cameraSpeed = 5;
@@ -35,6 +36,7 @@ public class PlayerHandler : MonoBehaviour {
         GetMapReference();
         //currentSelection = null;
         map = GameObject.Find("Map").GetComponent<Map>();
+        ruleSetEngine = GetComponent<RuleSetEngine>();
         mainCamera = GameObject.Find("Main Camera");
 
         acceptingInput = true;
@@ -153,10 +155,24 @@ public class PlayerHandler : MonoBehaviour {
         //in menu
 
         //in game
-        instance.MoveCamera(new Vector3(moveVector.x, moveVector.y, 0f));
+        //if (instance.acceptingInput == true) {
+            instance.MoveCamera(new Vector3(moveVector.x, moveVector.y, 0f));
+        //}
     }
-    public static void Event() {
-
+    public static void Event(int numKey) {
+        if (instance.acceptingInput == true) {
+            instance.acceptingInput = false;
+            switch (instance.currentState) {
+            }
+            instance.acceptingInput = true;
+        }
+    }
+    public static void ConfirmAction() {
+        switch (instance.currentState) {
+            case PlayerState.EnemyTargeted:
+                
+                break;
+        }
     }
     public static void EndTurn() {
         if (instance.acceptingInput) {
@@ -274,16 +290,18 @@ public class PlayerHandler : MonoBehaviour {
                 }
             }
         }
-
         //do something else, highlight for now
         foreach (Character targ in targets) {
-            Debug.Log(targ.gameObject.name);
+            //if weapon range == 1
             //if can hit diagonal target or target not diagonal
-            if (currentSelectedCharacter.inventory.currentWeapon.canHitDiagonal || map.GetAdjList(currentSelectedCharacter.CurrentCell.Position, false).Contains(targ.CurrentCell.Position)){
-                targ.gameObject.GetComponentInChildren<SpriteRenderer>().color = highlight;
-                map.HighLightCell(targ.CurrentCell.Position);
+            if (currentSelectedCharacter.inventory.currentWeapon.range == 1) {
+                if (currentSelectedCharacter.inventory.currentWeapon.canHitDiagonal || map.GetAdjList(currentSelectedCharacter.CurrentCell.Position, false).Contains(targ.CurrentCell.Position)) {
+                    targ.gameObject.GetComponentInChildren<SpriteRenderer>().color = highlight;
+                    map.HighLightCell(targ.CurrentCell.Position);
+                }
             }
         }
+        Tuple<double, double> hit = ruleSetEngine.ComputeHitInfo(currentSelectedCharacter, 0, currentTarget, 0);
         acceptingInput = true;
     }
     public void DisengageTargetEnemyContext(bool keepTargets) {
@@ -291,8 +309,8 @@ public class PlayerHandler : MonoBehaviour {
             targ.gameObject.GetComponentInChildren<SpriteRenderer>().color = noHighlight;
             map.ClearHighLight(targ.CurrentCell.Position);
         }
-        //if (!keepTargets) { targets = null; }
-        targets = null;
+        if (!keepTargets) { targets = null; }
+        currentTarget = null;
         acceptingInput = true;
     }
     public void EngagePowerContext() {

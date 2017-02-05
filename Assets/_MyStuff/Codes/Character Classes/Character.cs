@@ -52,6 +52,10 @@ public class Character : MonoBehaviour {
     protected Dictionary<int, Tuple<Attribute, int>> ancillaryMap;
     protected List<string> ancillaryList;
 
+    //hard coded
+    public int attack;
+    public int defense;
+
     //----------------------------------------------------------------------------------------------------------------------------------------------//
     void Awake() {
         //if (isPlayerControlled) {
@@ -154,6 +158,9 @@ public class Character : MonoBehaviour {
             ancillaryMap[att.ID].Second = ComputeAncillaryValue(att.ID);
             ancillaryList.Add(att.name);
         }
+        //HARDCODED ATTRIBUTE ID
+        attack = ancillaryMap[12].Second;
+        defense = ancillaryMap[15].Second;
         foreach (Profession prof in professions) {
             professionMono.chosenProfessions.Add(new Tuple<Profession, int>(prof, 0));
         }
@@ -168,6 +175,8 @@ public class Character : MonoBehaviour {
             foreach (int derivedAttID in GetDerivedAttributeIDs(attID)) {
                 ancillaryMap[derivedAttID].Second = ComputeAncillaryValue(derivedAttID);
             }
+            attack = ancillaryMap[12].Second;
+            defense = ancillaryMap[15].Second;
         }
     }
 
@@ -257,7 +266,7 @@ public class Character : MonoBehaviour {
     public int GetPhysicalAttributeValue(int attID) {
         return physicalMap[attID].Second;
     }
-    public float GetAncillayrAttributeValue(int attID) {
+    public int GetAncillayrAttributeValue(int attID) {
         return ancillaryMap[attID].Second;
     }
     public string GetPhysicalAttributeName(int attID) {

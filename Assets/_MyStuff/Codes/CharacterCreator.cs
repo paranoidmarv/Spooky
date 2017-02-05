@@ -180,10 +180,12 @@ public class CharacterCreator : MonoBehaviour {
         if(newCharacter.tag == "Character") {
             newCharacter.tag = "Enemy";
             newCharacter.type = Character.CharacterType.Enemy;
+            newCharacter.isPlayerControlled = false;
         }
         else if (newCharacter.tag == "Enemy") {
             newCharacter.tag = "Character";
             newCharacter.type = Character.CharacterType.Friendly;
+            newCharacter.isPlayerControlled = true;
         }
     }
     //=== Initialization ===================================================================================================================================

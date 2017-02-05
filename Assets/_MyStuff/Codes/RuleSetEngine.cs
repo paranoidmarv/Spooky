@@ -7,6 +7,9 @@ public class RuleSetEngine : MonoBehaviour {
     public List<Attribute> primaryAttributes;
     public List<Attribute> physicalAttributes;
     public List<Attribute> ancillaryAttributes;
+    private double[] twoDTenProbability = new double[] { 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01 };
+    private double[] twoDTenProbabilityAtLeast = new double[] { 1, 0.99, 0.97, 0.94, 0.90, 0.85, 0.79, 0.72, 0.64, 0.55, 0.45, 0.36, 0.28, 0.21, 0.15, 0.1, 0.06, 0.03, 0.01 };
+    private double[] twoDTenProbabilityAtMost = new double[] { 0.01, 0.03, 0.06, 0.1, 0.15, 0.21, 0.28, 0.36, 0.45, 0.55, 0.64, 0.72, 0.79, 0.85, 0.9, 0.94, 0.97, 0.99, 1 };
 
     public List<Profession> professions;
     public List<Specialization> specializations;
@@ -37,7 +40,45 @@ public class RuleSetEngine : MonoBehaviour {
         sC = GetComponent<SceneManager>();
     }
     //=== Interaction
-
+    public Tuple<double, double> ComputeHitInfo(Character attacker, int attackMod, Character defender, int defendMod) {
+        int attack = attacker.attack + attackMod; int defense = defender.defense + defendMod;
+        int combatDifference = attack - defense;
+        double chanceToHit = 0;
+        double chanceToMatch = 0;
+        if(combatDifference < 0) {
+            combatDifference = Mathf.Abs(combatDifference);
+            if(combatDifference >= 20) { return new Tuple<double, double>(0, 0); }
+            else {
+                int j = 0;
+                for(int i = combatDifference + 3; i < twoDTenProbability.Length; i++) {
+                    chanceToHit += twoDTenProbabilityAtLeast[i] * twoDTenProbabilityAtMost[j];
+                    chanceToMatch += twoDTenProbability[i - 1] * twoDTenProbability[j++];
+                }
+            }
+        }
+        else if(combatDifference > 0) {
+            if (combatDifference >= 20) { return new Tuple<double, double>(1, 0); }
+            else {
+                int j = combatDifference + 3;
+                double chanceToMiss = 0;
+                for (int i = 0; i < twoDTenProbability.Length - j; i++) {
+                    chanceToMiss += twoDTenProbabilityAtMost[i] * twoDTenProbabilityAtLeast[j];
+                    chanceToMatch += twoDTenProbability[j++ - 1] * twoDTenProbability[i];
+                }
+                chanceToHit = 1 - chanceToHit;
+            }
+        }
+        else {
+            int j = 0;
+            for(int i = 0; i < twoDTenProbability.Length - 1; i++) {
+                chanceToHit += twoDTenProbabilityAtLeast[i + 1] * twoDTenProbabilityAtMost[j];
+                chanceToMatch += twoDTenProbability[i] * twoDTenProbability[j];
+            }
+        }
+        Debug.Log(chanceToHit);
+        Debug.Log(chanceToMatch);
+        return new Tuple<double, double>(chanceToHit, chanceToMatch);
+    }
     public bool EndTurn() {
         foreach (Character character in sC.characters) {
             character.UpdateCharacter();
@@ -95,4 +136,6 @@ public class RuleSetEngine : MonoBehaviour {
             specializations.Add(new Specialization(entries[0].Split('\n')[1], entries[1], parProfID, iD, new Skill(ancillaryAttributes[assAttID].name, ancillaryAttributes[assAttID].description, i - 1, iD, assAttID)));
         }
     }
+
+    //methods constricting ruleset to ensure only working rulesets are loaded
 }

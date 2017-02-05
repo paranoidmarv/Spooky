@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Weapon : Item {
-    public int baseDamage;
+    public int minDamage;
+    public int maxDamage;
+    public Tuple<int, int> damageRange;
     public int difficultyClass;
     private CircleCollider2D rangeCollider;
     public float range;
@@ -17,6 +19,7 @@ public class Weapon : Item {
         rangeCollider.enabled = false;
         inRangeTargets = new List<Character>();
         canHitDiagonal = false;
+        damageRange = new Tuple<int, int>(minDamage, maxDamage);
         //==================
         rangeTargets = false;
     }
@@ -36,6 +39,7 @@ public class Weapon : Item {
         inRangeTargets.Clear();
     }
     private void OnTriggerEnter2D(Collider2D collision) {
+        //needs raycast to check LOS
         inRangeTargets.Add(collision.gameObject.GetComponent<Character>());
     }
 }

@@ -30,7 +30,7 @@ public class PlaceNewCharacter : MonoBehaviour {
 
     public void PlaceCharacter() {
         newCharacter.SetCell(sceneMap.highLightedCell);
-        newCharacter.gameObject.layer = 5;
+        newCharacter.gameObject.layer = 8;
         sceneMap.ClearHighLight(sceneMap.highLightedCell.Position);
         sceneMap.placingNewCharacter = false;
         sceneMap.newCharacter = null;
