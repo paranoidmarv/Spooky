@@ -9,7 +9,8 @@ public class UIManager : MonoBehaviour {
     public SceneManager sceneManager;
     private GameObject makeNewCharacter;
     public UICamera uiCam;
-	// Use this for initialization
+
+    public GameObject targetViewPanel;
 	void Awake () {
         //characterCreationPanel = GameObject.Find("Character Creation Panel");
         sceneManager = GameObject.Find("Player Manager").GetComponent<SceneManager>();
@@ -46,5 +47,9 @@ public class UIManager : MonoBehaviour {
             //cc.enabled = false;
         }
         
+    }
+
+    public void TargetView() {
+
     }
 }

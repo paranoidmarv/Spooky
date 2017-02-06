@@ -24,6 +24,7 @@ public class PlayerHandler : MonoBehaviour {
     }
     private Map map;
     private RuleSetEngine ruleSetEngine;
+    private UIManager uiManager;
 
     private GameObject mainCamera;
     private int cameraSpeed = 5;
@@ -37,6 +38,7 @@ public class PlayerHandler : MonoBehaviour {
         //currentSelection = null;
         map = GameObject.Find("Map").GetComponent<Map>();
         ruleSetEngine = GetComponent<RuleSetEngine>();
+        uiManager = GameObject.Find("UI Root").GetComponent<UIManager>();
         mainCamera = GameObject.Find("Main Camera");
 
         acceptingInput = true;
@@ -132,6 +134,8 @@ public class PlayerHandler : MonoBehaviour {
                             instance.currentTarget = clickedObject.GetComponent<Character>();
                             instance.currentTarget.transform.GetComponentInChildren<SpriteRenderer>().color = instance.highlight;
                             instance.acceptingInput = true;
+                            Tuple<double, double> hit = instance.ruleSetEngine.ComputeHitInfo(instance.currentSelectedCharacter, 0, instance.currentTarget, 0);
+                            //instance.uiManager
                             //show attack vs defense info
                         }
                         else {
@@ -301,7 +305,9 @@ public class PlayerHandler : MonoBehaviour {
                 }
             }
         }
-        Tuple<double, double> hit = ruleSetEngine.ComputeHitInfo(currentSelectedCharacter, 0, currentTarget, 0);
+        //calculate chance to hit
+        //Tuple<double, double> hit = ruleSetEngine.ComputeHitInfo(currentSelectedCharacter, 0, currentTarget, 0);
+        //-----------------------
         acceptingInput = true;
     }
     public void DisengageTargetEnemyContext(bool keepTargets) {
