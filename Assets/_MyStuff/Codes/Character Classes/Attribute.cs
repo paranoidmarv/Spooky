@@ -73,33 +73,9 @@ public class Attribute {
                 int.TryParse(entries[5], out defaultValue);
                 //Parse ID
                 int.TryParse(entries[6], out ID);
-                /*
-                string[] spEffects = entries[4].Split(':');
-                specialEffects = new int[spEffects.Length];
-                for (int i = 0; i < specialEffects.Length; i++) {
-                    int.TryParse(spEffects[i], out specialEffects[i]);
-                }
-
-                string[] uEffects = entries[5].Split(':');
-                utilityEffects = new int[uEffects.Length];
-                for (int i = 0; i < utilityEffects.Length; i++) {
-                    int.TryParse(uEffects[i], out utilityEffects[i]);
-                }
-
-                string[] iEffects = entries[6].Split(':');
-                inherentEffects = new int[iEffects.Length];
-                for (int i = 0; i < inherentEffects.Length; i++) {
-                    int.TryParse(iEffects[i], out inherentEffects[i]);
-                }
-                */
                 break;
             case AttributeType.Ancillary:
                 int.TryParse(entries[2], out parentedPhysicalAttribute);
-                /*string[] parentPhAtts = entries[3].Split(':');
-                parentedPhysicalAttributes = new int[parentPhAtts.Length];
-                for (int i = 0; i < parentPhAtts.Length; i++) {
-                    int.TryParse(parentPhAtts[i], out parentedPhysicalAttributes[i]);
-                }*/
                 int.TryParse(entries[3], out attributeRatio);
                 string[] aAttRange = entries[4].Split(':');
                 if (aAttRange.Length == 2) {
@@ -111,13 +87,5 @@ public class Attribute {
                 int.TryParse(entries[6], out ID);
                 break;
         }
-        /*
-        string[] valueRange = entries[7].Split('-');
-        if (valueRange.Length == 2) {
-            float.TryParse(valueRange[0], out range.x);
-            float.TryParse(valueRange[1], out range.y);
-        }
-        int.TryParse(entries[10], out ID);
-        */
     }
 }

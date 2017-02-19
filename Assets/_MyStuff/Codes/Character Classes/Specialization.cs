@@ -7,13 +7,15 @@ public class Specialization {
     public string description;
     public int parentProfessionID;
     public int iD;
-    public Skill mainSkill;
+    public GameObject baseSkillPrefab;
+    public Skill baseSkill;
 
-    public Specialization(string name, string description, int parentProfID, int iD, Skill mainSkill) {
+    public Specialization(string name, string description, int parentProfID, int iD, GameObject baseSkillPrefab) {
         this.name = name;
         this.description = description;
         parentProfessionID = parentProfID;
         this.iD = iD;
-        this.mainSkill = mainSkill;
+        this.baseSkillPrefab = baseSkillPrefab;
+        baseSkill = baseSkillPrefab.GetComponent<Skill>();
     }
 }

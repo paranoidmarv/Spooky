@@ -221,23 +221,30 @@
     <Compile Include="Assets\NGUI\Scripts\UI\UITexture.cs" />
     <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
     <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
-    <Compile Include="Assets\NGUIButtonForward.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\CanvasScreenSpaceScaler.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\CanvasWorldScaler.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Internal\VectorSwizzleExtensions.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelPerfectCamera.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\PixelSnap.cs" />
     <Compile Include="Assets\PixelPerfectCamera\Scripts\Scroller.cs" />
+    <Compile Include="Assets\_MyStuff\Arts\UI\Codes\AttackPanel.cs" />
+    <Compile Include="Assets\_MyStuff\Arts\UI\Codes\CharacterCreator.cs" />
+    <Compile Include="Assets\_MyStuff\Arts\UI\Codes\CharacterInfoPanel.cs" />
+    <Compile Include="Assets\_MyStuff\Arts\UI\Codes\Menu.cs" />
+    <Compile Include="Assets\_MyStuff\Arts\UI\Codes\UIManager.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Attribute.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Character.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Inventory.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Profession.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\ProfessionMonoBehaviour.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\ActiveWardCount.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Aim.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Covenant.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Detect.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\DisruptModes.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Power.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Specialization.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\CharacterCreator.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\BallisticWeapon.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\CQCWeapon.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\Item.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\Weapon.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Map\AStar.cs" />
@@ -247,9 +254,10 @@
     <Compile Include="Assets\_MyStuff\Codes\PlayerInput.cs" />
     <Compile Include="Assets\_MyStuff\Codes\RuleSetEngine.cs" />
     <Compile Include="Assets\_MyStuff\Codes\SceneManager.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Tuple.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\UIManager.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Utility Scripts\NGUIButtonForward.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Utility Scripts\PlaceNewCharacter.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Utility Scripts\PortraitInformant.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Utility Scripts\Tuple.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Backyard - Free\Readme.txt" />

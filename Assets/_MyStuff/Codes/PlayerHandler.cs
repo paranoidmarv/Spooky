@@ -14,10 +14,15 @@ public class PlayerHandler : MonoBehaviour {
     //InMenu = events are being driven by GUI
     //SomethingSelected = currentSelection is not null
     //Character/Enemy/Item Selected
-    public PlayerState currentState; //shouldn't be public
     public GameObject currentSelection; //shouldn't be public
     public Character currentSelectedCharacter;
     public Character currentTarget;
+    public List<Character> friendlyParty;
+    public void AddToParty(Character newPartyMember) {
+        friendlyParty.Add(newPartyMember);
+    }
+
+    public PlayerState currentState; //shouldn't be public
     private bool acceptingInput;
     public bool AcceptingInput {
         set { acceptingInput = value; }
@@ -33,10 +38,10 @@ public class PlayerHandler : MonoBehaviour {
         if (instance == null) { instance = this; }
         else if (instance != this) { Destroy(gameObject); }
         DontDestroyOnLoad(gameObject);
+        friendlyParty = new List<Character>();
         currentState = PlayerState.NothingSelected;
         GetMapReference();
-        //currentSelection = null;
-        map = GameObject.Find("Map").GetComponent<Map>();
+        map = transform.FindChild("Map").GetComponent<Map>();
         ruleSetEngine = GetComponent<RuleSetEngine>();
         uiManager = GameObject.Find("UI Root").GetComponent<UIManager>();
         mainCamera = GameObject.Find("Main Camera");
@@ -129,16 +134,18 @@ public class PlayerHandler : MonoBehaviour {
                     break;
                 case PlayerState.TargetingEnemies:
                     if(mouseButton == 0) {
-                        if (clickedObject.tag == "Enemy" && instance.targets.Contains(clickedObject.GetComponent<Character>())) {
+                        if ((clickedObject.tag == "Enemy" || clickedObject.tag == "Character") && instance.targets.Contains(clickedObject.GetComponent<Character>())) {
                             instance.DisengageTargetEnemyContext(true);
                             instance.currentTarget = clickedObject.GetComponent<Character>();
                             instance.currentTarget.transform.GetComponentInChildren<SpriteRenderer>().color = instance.highlight;
                             instance.acceptingInput = true;
-                            Tuple<double, double> hit = instance.ruleSetEngine.ComputeHitInfo(instance.currentSelectedCharacter, 0, instance.currentTarget, 0);
+                            if (!instance.uiManager.isAttackPanelToggled) { instance.uiManager.ToggleAttackPanel(); }
+                            else { instance.uiManager.SwitchAttackPanel(); }
                             //instance.uiManager
                             //show attack vs defense info
                         }
                         else {
+                            instance.uiManager.ToggleAttackPanel();
                             instance.DisengageTargetEnemyContext(false);
                             instance.ClearSelection();
                             instance.acceptingInput = true;
@@ -146,6 +153,7 @@ public class PlayerHandler : MonoBehaviour {
                         //if(clickedObject.tag == "Enemy") { }//attack coroutine
                     }
                     else if(mouseButton == 1) {
+                        instance.uiManager.ToggleAttackPanel();
                         instance.DisengageTargetEnemyContext(false);
                         instance.ClearSelection();
                         instance.acceptingInput = true;
@@ -188,7 +196,7 @@ public class PlayerHandler : MonoBehaviour {
         currentSelection = clickedObject;
         instance.currentState = PlayerState.CharacterSelected;
     }
-    private void ClearSelection() {
+    public void ClearSelection() {
         currentSelection = null;
         currentSelectedCharacter = null;
         instance.currentState = PlayerState.NothingSelected;
@@ -208,7 +216,7 @@ public class PlayerHandler : MonoBehaviour {
     }
     //--- Utility
     private void GetMapReference() {
-        map = GameObject.Find("Map").GetComponent<Map>();
+        map = transform.FindChild("Map").GetComponent<Map>();
         ClearSelection();
     }
     public void FinishedPlacingNewCharacter() {

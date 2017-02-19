@@ -4,16 +4,23 @@ using System.Collections.Generic;
 using System.IO;
 
 public class RuleSetEngine : MonoBehaviour {
-    public List<Attribute> primaryAttributes;
-    public List<Attribute> physicalAttributes;
-    public List<Attribute> ancillaryAttributes;
+    //=== 2d10 Probabilites ==========================================
     private double[] twoDTenProbability = new double[] { 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01 };
     private double[] twoDTenProbabilityAtLeast = new double[] { 1, 0.99, 0.97, 0.94, 0.90, 0.85, 0.79, 0.72, 0.64, 0.55, 0.45, 0.36, 0.28, 0.21, 0.15, 0.1, 0.06, 0.03, 0.01 };
     private double[] twoDTenProbabilityAtMost = new double[] { 0.01, 0.03, 0.06, 0.1, 0.15, 0.21, 0.28, 0.36, 0.45, 0.55, 0.64, 0.72, 0.79, 0.85, 0.9, 0.94, 0.97, 0.99, 1 };
+    //================================================================
+
+    public List<Attribute> primaryAttributes;
+    public List<Attribute> physicalAttributes;
+    public List<Attribute> ancillaryAttributes;
 
     public List<Profession> professions;
     public List<Specialization> specializations;
-    public List<Skill> skill;
+
+    public List<Skill> inherentSkills;
+    public List<Skill> learnedSkills;
+    public GameObject[] baseSpecialSkills;
+
     public bool isRuleSetLoaded { get; private set; }
     public TextAsset ruleSet;
     //=== Turn Variables ==========================================
@@ -28,8 +35,13 @@ public class RuleSetEngine : MonoBehaviour {
         primaryAttributes = new List<Attribute>();
         physicalAttributes = new List<Attribute>();
         ancillaryAttributes = new List<Attribute>();
+
         professions = new List<Profession>();
         specializations = new List<Specialization>();
+
+        inherentSkills = new List<Skill>();
+        learnedSkills = new List<Skill>();
+
         isRuleSetLoaded = false;
         LoadRuleSet();
         //=== Turn Variables
@@ -40,6 +52,9 @@ public class RuleSetEngine : MonoBehaviour {
         sC = GetComponent<SceneManager>();
     }
     //=== Interaction
+    public void ComputeAttack(Character attacker, int attackMod, Character defender, int defendMod) {
+
+    }
     public Tuple<double, double> ComputeHitInfo(Character attacker, int attackMod, Character defender, int defendMod) {
         int attack = attacker.attack + attackMod; int defense = defender.defense + defendMod;
         int combatDifference = attack - defense;
@@ -65,7 +80,7 @@ public class RuleSetEngine : MonoBehaviour {
                     chanceToMiss += twoDTenProbabilityAtMost[i] * twoDTenProbabilityAtLeast[j];
                     chanceToMatch += twoDTenProbability[j++ - 1] * twoDTenProbability[i];
                 }
-                chanceToHit = 1 - chanceToHit;
+                chanceToHit = 1 - chanceToMiss;
             }
         }
         else {
@@ -75,8 +90,6 @@ public class RuleSetEngine : MonoBehaviour {
                 chanceToMatch += twoDTenProbability[i] * twoDTenProbability[j];
             }
         }
-        Debug.Log(chanceToHit);
-        Debug.Log(chanceToMatch);
         return new Tuple<double, double>(chanceToHit, chanceToMatch);
     }
     public bool EndTurn() {
@@ -99,6 +112,7 @@ public class RuleSetEngine : MonoBehaviour {
                 if (type == 0) { InitializeRuleSetAttributes(Attribute.AttributeType.Primary, lines); }
                 else if (type == 1) { InitializeRuleSetAttributes(Attribute.AttributeType.Physical, lines); }
                 else if (type == 2) { InitializeRuleSetAttributes(Attribute.AttributeType.Ancillary, lines); }
+                //else if (type == 3) { InitializeSkills(lines); }
                 else if (type == 3) { InitializeRuleSetProfessions(lines); }
                 else if (type == 4) { InitializeRuleSetSpecializations(lines); }
             }
@@ -133,7 +147,8 @@ public class RuleSetEngine : MonoBehaviour {
             string[] entries = lines[i].Split(';');
             int parProfID, assAttID, iD;
             int.TryParse(entries[2], out parProfID); int.TryParse(entries[3], out assAttID); int.TryParse(entries[4], out iD);
-            specializations.Add(new Specialization(entries[0].Split('\n')[1], entries[1], parProfID, iD, new Skill(ancillaryAttributes[assAttID].name, ancillaryAttributes[assAttID].description, i - 1, iD, assAttID)));
+            //new Skill will instead be instantiate skill. skills will be prefabs
+            specializations.Add(new Specialization(entries[0].Split('\n')[1], entries[1], parProfID, iD, baseSpecialSkills[i - 1]));
         }
     }
 

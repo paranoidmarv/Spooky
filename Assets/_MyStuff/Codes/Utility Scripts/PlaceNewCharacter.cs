@@ -10,7 +10,7 @@ public class PlaceNewCharacter : MonoBehaviour {
         newCharacter = gameObject.GetComponent<Character>();
         newCharacter.gameObject.layer = 2;
         newCharacter.PlayerHandler.AcceptingInput = false;
-        sceneMap = GameObject.Find("Map").GetComponent<Map>();
+        sceneMap = GameObject.Find("Player Manager").transform.FindChild("Map").GetComponent<Map>();
         sceneMap.newCharacter = newCharacter.gameObject;
 	}
 	

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Character : MonoBehaviour {
-    public enum CharacterType { Friendly, Neutral, Enemy }
+    public enum CharacterType { Party, Friendly, Neutral, Enemy }
     public bool isPlayerControlled;
 
     public CharacterType type;
@@ -24,6 +24,7 @@ public class Character : MonoBehaviour {
         set { playerHandler = value; }
     }
     //private AIHandler aH;
+    public GameObject skillPool;
     public TextAsset characterTemplate;
     //===============================================================================
     //=== Action Variables
@@ -61,6 +62,7 @@ public class Character : MonoBehaviour {
         //if (isPlayerControlled) {
             playerHandler = GameObject.Find("Player Manager").GetComponent<PlayerHandler>();
         //}
+        skillPool = transform.FindChild("Skills").gameObject;
         primaryMap = new Dictionary<int, Tuple<Attribute, int>>();
         primaryList = new List<string>();
         physicalMap = new Dictionary<int, Tuple<Attribute, int>>();
@@ -87,12 +89,6 @@ public class Character : MonoBehaviour {
             ModifyActionPoints(ancillaryMap[ancillaryList.IndexOf("AP Regeneration")].Second);
         }
     }
-    public void UseWeapon(int weaponIndex) {
-        if(inventory.equippedWeapons[weaponIndex].itemType == Item.ItemType.CQCWeapon) {
-            CQCWeapon wep = (CQCWeapon)inventory.equippedWeapons[weaponIndex];
-            wep.Strike();
-        }
-    }
     //=================================================================================================================================================
     //=== Primary Attribute methods
     //=================================================================================================================================================
@@ -100,11 +96,13 @@ public class Character : MonoBehaviour {
         if (currentHealth + changeHP > primaryMap[0].Second) { currentHealth = primaryMap[0].Second; }//make condition for buffed health points
         else if (currentHealth + changeHP <= 0) { currentHealth = 0; }// code for you're dead
         else { currentHealth += changeHP; }
+        UIManager.InformPortraitValues(this);
     }
     private void ModifyActionPoints(int changeAP) {
         if (currentActionPoints + changeAP > primaryMap[1].Second) { currentActionPoints = primaryMap[1].Second; }//make condition for buffed action points
         else if (currentActionPoints + changeAP <= 0) { currentActionPoints = 0; }
         else { currentActionPoints += changeAP; }
+        UIManager.InformPortraitValues(this);
         playerHandler.DisengageMoveContext();
         ResetMovePaths();
         playerHandler.EngageMoveContext();
@@ -268,6 +266,9 @@ public class Character : MonoBehaviour {
     }
     public int GetAncillayrAttributeValue(int attID) {
         return ancillaryMap[attID].Second;
+    }
+    public int GetAncillayrAttributeValue(string attName) {
+        return ancillaryMap[ancillaryList.IndexOf(attName)].Second;
     }
     public string GetPhysicalAttributeName(int attID) {
         return physicalList[attID];

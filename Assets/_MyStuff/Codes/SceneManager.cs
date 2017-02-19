@@ -13,9 +13,9 @@ public class SceneManager : MonoBehaviour {
 	void Awake () {
         sceneReady = false;
         characters = new List<Character>();
-        sceneMap = GameObject.Find("Map").GetComponent<Map>();
-        playerHandler = GameObject.Find("Player Manager").GetComponent<PlayerHandler>();
-        ruleSetEngine = GameObject.Find("Player Manager").GetComponent<RuleSetEngine>();
+        sceneMap = transform.FindChild("Map").GetComponent<Map>();
+        playerHandler = GetComponent<PlayerHandler>();
+        ruleSetEngine = GetComponent<RuleSetEngine>();
         uiManager = GameObject.Find("UI Root").GetComponent<UIManager>();
         sceneMap.MakeMap();
         StartCoroutine(GetCharacters());
@@ -34,6 +34,10 @@ public class SceneManager : MonoBehaviour {
 
     public void AddNewCharacter(GameObject nChar) {
         characters.Add(nChar.GetComponent<Character>());
+        if (nChar.GetComponent<Character>().type == Character.CharacterType.Party) {
+            playerHandler.AddToParty(nChar.GetComponent<Character>());
+            uiManager.EngageInformant(nChar.GetComponent<Character>());
+        }
     }
 
     private IEnumerator GetCharacters() {
@@ -46,6 +50,7 @@ public class SceneManager : MonoBehaviour {
                     characters[i].SetCell(sceneMap.GetCell(new Tuple<int, int>(characters[i].cellX, characters[i].cellY)));
                     characters[i].PlayerHandler = playerHandler;
                     characters[i].InitializeCharacterAttributes(ruleSetEngine.primaryAttributes, ruleSetEngine.physicalAttributes, ruleSetEngine.ancillaryAttributes, ruleSetEngine.professions);
+                    if(characters[i].type == Character.CharacterType.Party) { playerHandler.AddToParty(characters[i]); }
                 }
                 gotCharacters = true;
             }

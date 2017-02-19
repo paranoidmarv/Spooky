@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour {
     public Character owner;
-
+    public List<Item> inventory;
     public int maxEquippableWeapons;
     public List<Weapon> equippedWeapons;
     public Weapon defaultWeapon;
@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour {
 	void Awake () {
         owner = transform.parent.gameObject.GetComponent<Character>();
         equippedWeapons = new List<Weapon>();
-        defaultWeapon = GameObject.Find("CQC_HandToHand").GetComponent<Weapon>();
+        defaultWeapon = transform.FindChild("CQC_HandToHand").GetComponent<Weapon>();
         EquipWeapon(defaultWeapon);
         currentWeapon = equippedWeapons[0];
 	}
