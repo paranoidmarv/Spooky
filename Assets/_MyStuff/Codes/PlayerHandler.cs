@@ -134,13 +134,15 @@ public class PlayerHandler : MonoBehaviour {
                     break;
                 case PlayerState.TargetingEnemies:
                     if(mouseButton == 0) {
-                        if ((clickedObject.tag == "Enemy" || clickedObject.tag == "Character") && instance.targets.Contains(clickedObject.GetComponent<Character>())) {
+                        //(clickedObject.tag == "Enemy" || clickedObject.tag == "Character")
+                        if (clickedObject.tag == "Enemy" && instance.targets.Contains(clickedObject.GetComponent<Character>())) {
                             instance.DisengageTargetEnemyContext(true);
                             instance.currentTarget = clickedObject.GetComponent<Character>();
                             instance.currentTarget.transform.GetComponentInChildren<SpriteRenderer>().color = instance.highlight;
                             instance.acceptingInput = true;
                             if (!instance.uiManager.isAttackPanelToggled) { instance.uiManager.ToggleAttackPanel(); }
                             else { instance.uiManager.SwitchAttackPanel(); }
+                            instance.uiManager.InformAttackPanel(instance.currentSelectedCharacter, instance.currentSelectedCharacter.professionMono.equippedSkills[0], instance.currentTarget);
                             //instance.uiManager
                             //show attack vs defense info
                         }

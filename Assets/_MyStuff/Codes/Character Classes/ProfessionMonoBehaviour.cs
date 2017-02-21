@@ -24,6 +24,13 @@ public class ProfessionMonoBehaviour : MonoBehaviour {
         knownSkills.Add(Instantiate(owner.professionMono.major.baseSkillPrefab, owner.skillPool.transform).GetComponent<Skill>());
         knownSkills.Add(Instantiate(owner.professionMono.minor.baseSkillPrefab, owner.skillPool.transform).GetComponent<Skill>());
         equippedSkills = new Skill[owner.GetAncillayrAttributeValue("Skill Slots") + 1];
+        if(equippedSkills.Length >= 2) {
+            if(knownSkills[0].skillType == Skill.SkillType.Active) { equippedSkills[0] = knownSkills[0]; }
+            if (knownSkills[1].skillType == Skill.SkillType.Active) { equippedSkills[1] = knownSkills[1]; }
+        }
+        else {
+            if (knownSkills[0].skillType == Skill.SkillType.Active) { equippedSkills[0] = knownSkills[0]; }
+        }
     }
     public void EquipSkill(int skillID, int skillSlot) {
 

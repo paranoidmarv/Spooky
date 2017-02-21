@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Profession {
-    public string name;
+    public string professionName;
     public string description;
     public int iD;
     public int[] childSpecializationIDs;
 
     public Profession(string name, string description, string[] childSpecIDs, int iD) {
-        this.name = name;
+        professionName = name;
         this.description = description;
         this.iD = iD;
         childSpecializationIDs = new int[childSpecIDs.Length];

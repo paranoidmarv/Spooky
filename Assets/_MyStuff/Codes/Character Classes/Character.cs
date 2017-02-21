@@ -62,6 +62,7 @@ public class Character : MonoBehaviour {
         //if (isPlayerControlled) {
             playerHandler = GameObject.Find("Player Manager").GetComponent<PlayerHandler>();
         //}
+        // else get AIHandler
         skillPool = transform.FindChild("Skills").gameObject;
         primaryMap = new Dictionary<int, Tuple<Attribute, int>>();
         primaryList = new List<string>();
@@ -96,16 +97,20 @@ public class Character : MonoBehaviour {
         if (currentHealth + changeHP > primaryMap[0].Second) { currentHealth = primaryMap[0].Second; }//make condition for buffed health points
         else if (currentHealth + changeHP <= 0) { currentHealth = 0; }// code for you're dead
         else { currentHealth += changeHP; }
+        //if in party 
         UIManager.InformPortraitValues(this);
+        //
     }
     private void ModifyActionPoints(int changeAP) {
         if (currentActionPoints + changeAP > primaryMap[1].Second) { currentActionPoints = primaryMap[1].Second; }//make condition for buffed action points
         else if (currentActionPoints + changeAP <= 0) { currentActionPoints = 0; }
         else { currentActionPoints += changeAP; }
+        //if in party
         UIManager.InformPortraitValues(this);
         playerHandler.DisengageMoveContext();
         ResetMovePaths();
         playerHandler.EngageMoveContext();
+        //
     }
     //--- Context Methods
     public void SetMovePaths(List<Cell> movPaths) {

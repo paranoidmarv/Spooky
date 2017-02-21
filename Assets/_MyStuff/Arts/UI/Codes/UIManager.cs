@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour {
     public SceneManager sceneManager;
 
     public GameObject attackPanel;
+    private AttackPanel attkP;
     public GameObject characterInfoPanel;
     public GameObject mainPanel;
     public GameObject portraitPanel;
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour {
         makeNewCharacter = GameObject.Find("MakeNewCharacter");
 
         attackPanel = transform.FindChild("Attack Panel").gameObject;
+        attkP = attackPanel.GetComponent<AttackPanel>();
         characterInfoPanel = transform.FindChild("Character Panel").gameObject;
         mainPanel = transform.FindChild("Main Panel").gameObject;
         portraitPanel = mainPanel.transform.FindChild("Portrait Panel").gameObject;
@@ -90,8 +92,8 @@ public class UIManager : MonoBehaviour {
         if (!isAttackPanelToggled) {
             Debug.Log("toggle");
             attackPanel.SetActive(true);
-            Tuple<double, double> attackRolls = sceneManager.ruleSetEngine.ComputeHitInfo(sceneManager.playerHandler.currentSelectedCharacter, 0, sceneManager.playerHandler.currentTarget, 0);
-            attackPanel.GetComponent<AttackPanel>().SetAttackPanel(sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.attackSprite, attackRolls.First*100f, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.minDamage, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.maxDamage);
+            //Tuple<double, double> attackRolls = sceneManager.ruleSetEngine.ComputeHitInfo(sceneManager.playerHandler.currentSelectedCharacter, 0, sceneManager.playerHandler.currentTarget, 0);
+            //attackPanel.GetComponent<AttackPanel>().SetAttackPanel(sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.attackSprite, attackRolls.First*100f, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.minDamage, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.maxDamage);
             isAttackPanelToggled = true;
         }
         else {
@@ -101,8 +103,8 @@ public class UIManager : MonoBehaviour {
     }
     public void SwitchAttackPanel() {
         Debug.Log("switch");
-        Tuple<double, double> attackRolls = sceneManager.ruleSetEngine.ComputeHitInfo(sceneManager.playerHandler.currentSelectedCharacter, 0, sceneManager.playerHandler.currentTarget, 0);
-        attackPanel.GetComponent<AttackPanel>().SetAttackPanel(sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.attackSprite, attackRolls.First * 100f, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.minDamage, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.maxDamage);
+        //Tuple<double, double> attackRolls = sceneManager.ruleSetEngine.ComputeHitInfo(sceneManager.playerHandler.currentSelectedCharacter, 0, sceneManager.playerHandler.currentTarget, 0);
+        //attackPanel.GetComponent<AttackPanel>().SetAttackPanel(sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.attackSprite, attackRolls.First * 100f, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.minDamage, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.maxDamage);
     }
     //=== Inform Panels =================================================================================
     public void EngageInformant(Character character) {
@@ -115,6 +117,9 @@ public class UIManager : MonoBehaviour {
         foreach(PortraitInformant pI in instance.portraitInformants) {
             pI.SetValues();
         }
+    }
+    public void InformAttackPanel(Character character, Skill skill, Character target) {
+        attkP.SetAttackPanel(skill.skillSpriteName, 0.1, 1, 2);
     }
     private void GetInformantReferences() {
         foreach(Transform child in portraitPanel.transform) {

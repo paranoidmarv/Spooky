@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Weapon : Item {
-    public enum WeaponType { CQC, Ballistic }
+    public enum WeaponType { CQC, Ballistic, NA }
     public WeaponType weaponType;
     public int minDamage;
     public int maxDamage;
