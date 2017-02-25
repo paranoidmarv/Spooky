@@ -63,6 +63,8 @@ public class PlayerHandler : MonoBehaviour {
                             instance.SelectObject(clickedObject);
                             instance.currentSelectedCharacter = instance.currentSelection.GetComponent<Character>();
                             instance.EngageMoveContext();
+                            instance.EngageSkillContext();
+                            instance.uiManager.InformSkillPanel(instance.currentSelectedCharacter);
                             instance.acceptingInput = true;
                         }
                         /*else if (clickedObject.tag == "Enemy") {
@@ -103,10 +105,12 @@ public class PlayerHandler : MonoBehaviour {
                             instance.SelectObject(clickedObject);
                             instance.currentSelectedCharacter = clickedObject.GetComponent<Character>();
                             instance.EngageMoveContext();
+                            instance.uiManager.InformSkillPanel(instance.currentSelectedCharacter);
                             instance.acceptingInput = true;
                         }
                         else {
                             instance.DisengageMoveContext();
+                            instance.DisengageSkillContext();
                             instance.ClearSelection();
                             instance.acceptingInput = true;
                         }
@@ -115,6 +119,7 @@ public class PlayerHandler : MonoBehaviour {
                         if (clickedObject.tag == "Tile" && clickedObject.GetComponent<Cell>().IsTraversable && !clickedObject.GetComponent<Cell>().isOccupied
                             && instance.currentSelectedCharacter.moving == false && instance.currentSelectedCharacter.GetMovePaths().Contains(clickedObject.GetComponent<Cell>())) {
                             instance.DisengageMoveContext();
+                            instance.DisengageSkillContext();
                             instance.MoveTo(instance.currentSelection, clickedObject);
                         }
                         else if (clickedObject.tag == "Enemy") {
@@ -125,6 +130,7 @@ public class PlayerHandler : MonoBehaviour {
                         }
                         else {
                             instance.DisengageMoveContext();
+                            instance.DisengageSkillContext();
                             instance.ClearSelection();
                             instance.acceptingInput = true;
                         }
@@ -141,7 +147,7 @@ public class PlayerHandler : MonoBehaviour {
                             instance.currentTarget.transform.GetComponentInChildren<SpriteRenderer>().color = instance.highlight;
                             instance.acceptingInput = true;
                             if (!instance.uiManager.isAttackPanelToggled) { instance.uiManager.ToggleAttackPanel(); }
-                            else { instance.uiManager.SwitchAttackPanel(); }
+                            //else { instance.uiManager.SwitchAttackPanel(); }
                             instance.uiManager.InformAttackPanel(instance.currentSelectedCharacter, instance.currentSelectedCharacter.professionMono.equippedSkills[0], instance.currentTarget);
                             //instance.uiManager
                             //show attack vs defense info
@@ -149,6 +155,7 @@ public class PlayerHandler : MonoBehaviour {
                         else {
                             instance.uiManager.ToggleAttackPanel();
                             instance.DisengageTargetEnemyContext(false);
+                            instance.DisengageSkillContext();
                             instance.ClearSelection();
                             instance.acceptingInput = true;
                         }
@@ -157,6 +164,7 @@ public class PlayerHandler : MonoBehaviour {
                     else if(mouseButton == 1) {
                         instance.uiManager.ToggleAttackPanel();
                         instance.DisengageTargetEnemyContext(false);
+                        instance.DisengageSkillContext();
                         instance.ClearSelection();
                         instance.acceptingInput = true;
                     }
@@ -273,6 +281,15 @@ public class PlayerHandler : MonoBehaviour {
             }
         }
     }
+    public void EngageSkillContext() {
+        if(currentSelectedCharacter != null) {
+            uiManager.ToggleSkillPanel();
+
+        }
+    }
+    public void DisengageSkillContext() {
+        uiManager.ToggleSkillPanel();
+    }
     public void EngageTargetContext() {
         if (currentSelectedCharacter != null && currentTarget != null) {
             switch (currentTarget.Type) {
@@ -280,7 +297,10 @@ public class PlayerHandler : MonoBehaviour {
                     acceptingInput = true; ;
                     break;
                 case Character.CharacterType.Enemy:
+                    //here i need to equip skill that then ranges with weapon if required weapon is available
+                    //default is CQC_Fists
                     instance.currentState = PlayerState.TargetingEnemies;
+                    currentSelectedCharacter.professionMono.EquipSkill(0);
                     StartCoroutine(currentSelectedCharacter.inventory.GetWeaponRange());
                     break;
             }

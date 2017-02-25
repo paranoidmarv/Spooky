@@ -16,6 +16,8 @@ public class UIManager : MonoBehaviour {
     private AttackPanel attkP;
     public GameObject characterInfoPanel;
     public GameObject mainPanel;
+    public GameObject skillPanel;
+    private SkillPanel skllP;
     public GameObject portraitPanel;
     //mainMenuPanel, inventoryPanel
     private List<PortraitInformant> portraitInformants;
@@ -31,6 +33,8 @@ public class UIManager : MonoBehaviour {
         attkP = attackPanel.GetComponent<AttackPanel>();
         characterInfoPanel = transform.FindChild("Character Panel").gameObject;
         mainPanel = transform.FindChild("Main Panel").gameObject;
+        skillPanel = mainPanel.transform.FindChild("SkillPanel").gameObject;
+        skllP = skillPanel.GetComponent<SkillPanel>();
         portraitPanel = mainPanel.transform.FindChild("Portrait Panel").gameObject;
 
         portraitInformants = new List<PortraitInformant>();
@@ -62,7 +66,6 @@ public class UIManager : MonoBehaviour {
             UnPauseGame();
             characterCreationPanel.SetActive(false);
             makeNewCharacter.GetComponentInChildren<UILabel>().text = "Create New Character";
-            sceneManager.playerHandler.AcceptingInput = true;
         }     
     }
 
@@ -87,13 +90,23 @@ public class UIManager : MonoBehaviour {
         //inventory, characterInfo, mainMenu
     }
 
+    public bool isSkillPanelToggled = false;
+    public void ToggleSkillPanel() {
+        if (!isSkillPanelToggled) {
+            skillPanel.SetActive(true);
+            isSkillPanelToggled = true;
+        }
+        else {
+            skillPanel.SetActive(false);
+            isSkillPanelToggled = false;
+        }
+    }
+
     public bool isAttackPanelToggled = false;
     public void ToggleAttackPanel() {
         if (!isAttackPanelToggled) {
             Debug.Log("toggle");
             attackPanel.SetActive(true);
-            //Tuple<double, double> attackRolls = sceneManager.ruleSetEngine.ComputeHitInfo(sceneManager.playerHandler.currentSelectedCharacter, 0, sceneManager.playerHandler.currentTarget, 0);
-            //attackPanel.GetComponent<AttackPanel>().SetAttackPanel(sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.attackSprite, attackRolls.First*100f, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.minDamage, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.maxDamage);
             isAttackPanelToggled = true;
         }
         else {
@@ -103,8 +116,6 @@ public class UIManager : MonoBehaviour {
     }
     public void SwitchAttackPanel() {
         Debug.Log("switch");
-        //Tuple<double, double> attackRolls = sceneManager.ruleSetEngine.ComputeHitInfo(sceneManager.playerHandler.currentSelectedCharacter, 0, sceneManager.playerHandler.currentTarget, 0);
-        //attackPanel.GetComponent<AttackPanel>().SetAttackPanel(sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.attackSprite, attackRolls.First * 100f, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.minDamage, sceneManager.playerHandler.currentSelectedCharacter.inventory.currentWeapon.maxDamage);
     }
     //=== Inform Panels =================================================================================
     public void EngageInformant(Character character) {
@@ -119,7 +130,20 @@ public class UIManager : MonoBehaviour {
         }
     }
     public void InformAttackPanel(Character character, Skill skill, Character target) {
+        if(skill.focus) { attkP.EnableFocusPanel(skill); }
         attkP.SetAttackPanel(skill.skillSpriteName, 0.1, 1, 2);
+    }
+    public void InformSkillPanel(Character character) {
+        for(int i = 0; i < skllP.skillButtons.Length - 1; i++) {
+            if (i < character.professionMono.equippedSkills.Length) {
+                if (character.professionMono.equippedSkills[i] != null) { skllP.InformSkillButton(character.professionMono.equippedSkills[i], i); }
+                else { skllP.DisableSkillButton(i); }
+            }
+            else {
+                skllP.RemoveButton(i);
+            }
+        }
+        skllP.InformSkillButton(character.professionMono.useItemSKill, 8);
     }
     private void GetInformantReferences() {
         foreach(Transform child in portraitPanel.transform) {

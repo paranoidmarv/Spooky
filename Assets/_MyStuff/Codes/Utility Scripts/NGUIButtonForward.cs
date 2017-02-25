@@ -10,6 +10,7 @@ public class NGUIButtonForward : MonoBehaviour {
     private GameObject professionPanel;
     List<string> button;
     List<string> buttonPressed;
+    public int skillButtonValue;
 	// Use this for initialization
     void Awake() {
         uiManager = GameObject.Find("UI Root").GetComponent<UIManager>();
@@ -57,7 +58,7 @@ public class NGUIButtonForward : MonoBehaviour {
                     }
                     break;
                 case ButtonType.FocusAbility:
-
+                    //uiManager.
                     break;
                 case ButtonType.CharacterInfo:
                     uiManager.ToggleMenuPanel(Menu.MenuPanelType.CharacterInfo, string.Empty);

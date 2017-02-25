@@ -8,43 +8,30 @@ public class ProfessionMonoBehaviour : MonoBehaviour {
     public Specialization minor;
     public List<Skill> knownSkills;
     public Skill[] equippedSkills;
+    public Skill useItemSKill;
     private Character owner;
-	// Use this for initialization
+
 	void Awake () {
         chosenProfessions = new List<Tuple<Profession, int>>();
         knownSkills = new List<Skill>();
         owner = GetComponent<Character>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        useItemSKill = owner.skillPool.transform.Find("UseItem").GetComponent<Skill>();
+    }
+
     public void ConfirmSpecializations() {
         knownSkills.Add(Instantiate(owner.professionMono.major.baseSkillPrefab, owner.skillPool.transform).GetComponent<Skill>());
         knownSkills.Add(Instantiate(owner.professionMono.minor.baseSkillPrefab, owner.skillPool.transform).GetComponent<Skill>());
-        equippedSkills = new Skill[owner.GetAncillayrAttributeValue("Skill Slots") + 1];
+        equippedSkills = new Skill[owner.GetAncillayrAttributeValue("Skill Slots")];
         if(equippedSkills.Length >= 2) {
             if(knownSkills[0].skillType == Skill.SkillType.Active) { equippedSkills[0] = knownSkills[0]; }
             if (knownSkills[1].skillType == Skill.SkillType.Active) { equippedSkills[1] = knownSkills[1]; }
         }
-        else {
+        else if (equippedSkills.Length >= 1) {
             if (knownSkills[0].skillType == Skill.SkillType.Active) { equippedSkills[0] = knownSkills[0]; }
         }
     }
-    public void EquipSkill(int skillID, int skillSlot) {
+
+    public void EquipSkill(int skillSlot) {
 
     }
-//======================================================
-//=== Special Abilities
-//======================================================
-    //=== CQC
-    void Power() {
-
-    }
-    //=== Ballistics
-    //=== Courser
-    //=== Detective
-    //=== Shaman
-    //=== Detective
 }

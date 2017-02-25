@@ -2,5 +2,5 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Detect : Skill {
+public class Disruptor : Skill {
 }

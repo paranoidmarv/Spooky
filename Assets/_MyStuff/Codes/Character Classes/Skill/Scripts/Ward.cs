@@ -2,5 +2,5 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActiveWardCount : Skill {
+public class Ward : Skill {
 }

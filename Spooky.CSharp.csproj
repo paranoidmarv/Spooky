@@ -52,6 +52,9 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -66,6 +69,9 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -231,6 +237,7 @@
     <Compile Include="Assets\_MyStuff\Arts\UI\Codes\CharacterCreator.cs" />
     <Compile Include="Assets\_MyStuff\Arts\UI\Codes\CharacterInfoPanel.cs" />
     <Compile Include="Assets\_MyStuff\Arts\UI\Codes\Menu.cs" />
+    <Compile Include="Assets\_MyStuff\Arts\UI\Codes\SkillPanel.cs" />
     <Compile Include="Assets\_MyStuff\Arts\UI\Codes\UIManager.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Attribute.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Character.cs" />
@@ -238,12 +245,13 @@
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Profession.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\ProfessionMonoBehaviour.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\ActiveWardCount.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Aim.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Covenant.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Detect.cs" />
-    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\DisruptModes.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Detector.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Disruptor.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Power.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\UseItem.cs" />
+    <Compile Include="Assets\_MyStuff\Codes\Character Classes\Skill\Scripts\Ward.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Character Classes\Specialization.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\Item.cs" />
     <Compile Include="Assets\_MyStuff\Codes\Equipment\Code\Weapon.cs" />

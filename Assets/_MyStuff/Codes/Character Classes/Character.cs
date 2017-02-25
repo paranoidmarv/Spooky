@@ -238,6 +238,7 @@ public class Character : MonoBehaviour {
         moving = false;
         ModifyActionPoints(moveCost);
         moveCost = 0;
+        playerHandler.EngageSkillContext();
         playerHandler.AcceptingInput = true;
     }
     public int[] GetPrimaryAttributeIDs(int attID) {

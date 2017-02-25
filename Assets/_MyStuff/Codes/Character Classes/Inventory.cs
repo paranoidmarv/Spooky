@@ -28,10 +28,6 @@ public class Inventory : MonoBehaviour {
         }
     }
     public IEnumerator GetWeaponRange() {
-        //Instead of returning range
-        //have a collider set on weapon object
-        //based on range, and is enabled when
-        //targetting with weapon
         currentWeapon.RangeTargets();
         yield return new WaitForFixedUpdate();
         owner.PlayerHandler.EngageTargetEnemyContext(currentWeapon.inRangeTargets);
